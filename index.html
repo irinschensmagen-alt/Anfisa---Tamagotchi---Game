@@ -1,46 +1,883 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Londrina+Shadow' rel='stylesheet' type='text/css'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anfisa – Mein Tamagotchi 🐾</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   BASE
+══════════════════════════════════════ */
+:root{
+  --pk:#ff6eb4; --bl:#5be0ff; --gr:#5bffb0; --yl:#ffe95b; --pu:#b56bff;
+  --card:rgba(10,4,26,.84); --txt:#f0e6ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:#06000f;overflow:hidden;}
+
+#bg{position:fixed;inset:0;
+  background:url('images/A_house_for_Anfisa.png') center/cover no-repeat;
+  filter:brightness(.35) saturate(1.3);z-index:0;}
+#bgo{position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(80,20,160,.45),transparent 68%);z-index:1;}
+
+#root{
+  position:relative;z-index:10;
+  height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:5px 10px 5px;overflow:hidden;
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+#hdr{text-align:center;flex-shrink:0;margin-bottom:3px;}
+h1{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.3rem,3.8vw,2.2rem);
+  background:linear-gradient(135deg,var(--pk),var(--bl),var(--yl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(255,110,180,.7));letter-spacing:2px;line-height:1.1;
+}
+.sub{color:var(--bl);font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:.7;}
+
+/* ══════════════════════════════════════
+   START SCREEN
+══════════════════════════════════════ */
+#start{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+#ewrap{position:relative;width:230px;height:280px;display:flex;align-items:center;justify-content:center;}
+#egg{
+  position:absolute;width:210px;height:265px;object-fit:contain;
+  filter:drop-shadow(0 0 28px rgba(255,200,90,.6));
+  animation:efloat 3s ease-in-out infinite;
+  transition:opacity .5s,transform .5s;
+}
+@keyframes efloat{0%,100%{transform:translateY(0) rotate(0)}33%{transform:translateY(-10px) rotate(-2deg)}66%{transform:translateY(-4px) rotate(2deg)}}
+#eglow{position:absolute;width:170px;height:230px;border-radius:50%;pointer-events:none;transition:box-shadow .5s;}
+#cracks{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;}
+#cracks svg{width:100%;height:100%;}
+#bwrap{
+  position:absolute;bottom:0;width:210px;height:155px;
+  overflow:hidden;opacity:0;transition:opacity .5s;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+#begg{width:190px;object-fit:contain;transform:translateY(40px);transition:transform .7s cubic-bezier(.34,1.2,.64,1);}
+#sdesc{
+  color:rgba(255,255,255,.6);font-size:.86rem;text-align:center;max-width:310px;line-height:1.6;
+  background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 16px;
+}
+#sbtn{
+  font-family:'Fredoka One',cursive;font-size:1.35rem;padding:11px 42px;
+  background:linear-gradient(135deg,var(--pk),var(--pu));
+  border:none;border-radius:50px;color:#fff;cursor:pointer;
+  box-shadow:0 0 28px rgba(255,110,180,.65);transition:all .2s;letter-spacing:1px;
+}
+#sbtn:hover{transform:scale(1.06);box-shadow:0 0 42px rgba(255,110,180,.9);}
+#sbtn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ══════════════════════════════════════
+   GAME SCREEN
+══════════════════════════════════════ */
+#game{flex:1;display:flex;flex-direction:column;width:100%;max-width:880px;gap:5px;overflow:hidden;}
+
+/* ── top info row ── */
+#topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;}
+#scores{
+  display:flex;gap:12px;align-items:center;
+  background:var(--card);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:30px;padding:4px 14px;
+}
+.si{font-size:.76rem;font-weight:700;}
+.si span{font-family:'Fredoka One',cursive;font-size:.98rem;}
+.sg{color:var(--gr);}.sr{color:#ff6b7a;}
+#lbadge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--card);border:1.5px solid var(--pu);
+  border-radius:30px;padding:4px 14px;
+  color:var(--pu);font-weight:700;font-size:.73rem;
+  box-shadow:0 0 12px rgba(181,107,255,.3);
+}
+
+/* ── PROGRESS BAR (TOP) ── */
+#progrow{
+  display:flex;align-items:center;gap:7px;flex-shrink:0;
+  background:var(--card);border:1.5px solid rgba(255,255,255,.07);
+  border-radius:13px;padding:6px 12px;
+}
+#plbl{
+  font-size:.6rem;font-weight:800;color:rgba(255,255,255,.28);
+  text-transform:uppercase;letter-spacing:2px;flex-shrink:0;white-space:nowrap;
+}
+#plbl span{color:var(--yl);}
+#accbar{display:flex;gap:3px;flex:1;}
+.as{
+  flex:1;height:26px;min-width:0;
+  background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.12);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:.88rem;transition:all .3s;
+}
+.as.on{
+  background:rgba(91,224,255,.1);border:1.5px solid var(--bl);
+  box-shadow:0 0 6px rgba(91,224,255,.3);
+  animation:popin .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popin{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* ── 3 NEED PILLS ── */
+#needs{display:flex;gap:7px;flex-shrink:0;}
+.nc{
+  flex:1;display:flex;align-items:center;gap:6px;
+  background:var(--card);border:2px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:6px 10px;transition:all .3s;
+}
+.nc.active{
+  border-color:var(--pk);
+  box-shadow:0 0 18px rgba(255,110,180,.55),inset 0 0 10px rgba(255,110,180,.09);
+  animation:npulse 1.6s infinite;
+}
+.nc.active .nt{color:var(--pk);}
+@keyframes npulse{
+  0%,100%{box-shadow:0 0 18px rgba(255,110,180,.55),inset 0 0 10px rgba(255,110,180,.09)}
+  50%{box-shadow:0 0 30px rgba(255,110,180,.9),inset 0 0 16px rgba(255,110,180,.16)}
+}
+.ni{font-size:1.4rem;flex-shrink:0;}
+.nt{font-family:'Fredoka One',cursive;font-size:.76rem;color:rgba(255,255,255,.4);transition:color .3s;line-height:1.2;}
+.ns{font-size:.58rem;color:rgba(255,255,255,.22);}
+
+/* ── MAIN PLAY AREA ── */
+#play{flex:1;display:grid;grid-template-columns:175px 1fr;gap:7px;min-height:0;overflow:hidden;}
+
+/* ── CAT PORTRAIT (left) ── */
+#catbox{
+  background:var(--card);border:1.5px solid rgba(255,255,255,.08);
+  border-radius:16px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:8px 5px;position:relative;overflow:hidden;
+}
+#catbox::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 80%,rgba(91,224,255,.08),transparent 65%);
+}
+#cat{
+  width:148px;height:148px;object-fit:contain;
+  filter:drop-shadow(0 0 16px rgba(91,224,255,.35));
+  animation:cfloat 3s ease-in-out infinite;
+  position:relative;z-index:1;
+  display:block;
+}
+#cat-fb{
+  font-size:4.5rem;display:none;
+  animation:cfloat 3s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+/* mood label under cat */
+#cat-mood{
+  font-family:'Fredoka One',cursive;font-size:.72rem;
+  color:var(--pk);margin-top:4px;text-align:center;
+  position:relative;z-index:1;line-height:1.2;
+  text-shadow:0 0 8px rgba(255,110,180,.5);
+}
+#catname{
+  font-family:'Fredoka One',cursive;color:var(--bl);font-size:.95rem;
+  margin-top:2px;letter-spacing:1px;
+  text-shadow:0 0 10px rgba(91,224,255,.55);
+  position:relative;z-index:1;
+}
+
+@keyframes cfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px) rotate(-4deg)}40%,80%{transform:translateX(9px) rotate(4deg)}}
+@keyframes cbounce{0%,100%{transform:scale(1)}30%{transform:scale(1.18) rotate(-5deg)}60%{transform:scale(.93) rotate(3deg)}}
+@keyframes cwiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg) scale(1.07)}75%{transform:rotate(9deg) scale(1.07)}}
+.shake {animation:cshake  .6s  ease   !important;}
+.bounce{animation:cbounce .75s ease   !important;}
+.wiggle{animation:cwiggle .45s ease 3 !important;}
+
+/* ── QUESTION PANEL (right) ── */
+#qpanel{display:flex;flex-direction:column;gap:6px;overflow:hidden;min-height:0;}
+
+/* timer row */
+#timerrow{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+#tlbl{color:rgba(255,255,255,.38);font-size:.72rem;font-weight:700;}
+#tbg{flex:1;height:9px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden;}
+#tbar{height:100%;width:100%;background:linear-gradient(90deg,var(--gr),var(--yl));border-radius:8px;transition:width 1s linear,background 1s;}
+#tbar.warn{background:linear-gradient(90deg,#ffb83a,var(--yl));}
+#tbar.dng {background:linear-gradient(90deg,#ff3a3a,#ff9a3a);}
+#tnum{font-family:'Fredoka One',cursive;font-size:1.1rem;min-width:28px;text-align:right;color:var(--yl);text-shadow:0 0 8px rgba(255,233,91,.6);}
+
+/* question card */
+#qcard{
+  flex:1;background:var(--card);border:1.5px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:10px 13px;
+  display:flex;flex-direction:column;overflow:hidden;min-height:0;
+}
+#qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0;}
+#qprompt{font-size:.68rem;font-weight:800;color:var(--yl);text-transform:uppercase;letter-spacing:1.2px;}
+#qcnt{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.28);}
+
+/* instruction line */
+#qinstr{
+  font-size:.72rem;font-weight:700;
+  color:var(--bl);
+  margin-bottom:8px;flex-shrink:0;
+  letter-spacing:.3px;
+}
+
+#aw{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:5px;min-height:0;}
+.ab{
+  display:block;width:100%;
+  background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.11);
+  border-radius:11px;padding:8px 13px;
+  color:var(--txt);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
+  text-align:left;cursor:pointer;transition:all .16s;flex-shrink:0;
+}
+.ab:hover:not(:disabled){background:rgba(91,224,255,.1);border-color:var(--bl);color:var(--bl);transform:translateX(4px);}
+.ab.ok{background:rgba(91,255,176,.16);border-color:var(--gr);color:var(--gr);box-shadow:0 0 12px rgba(91,255,176,.4);}
+.ab.no{background:rgba(255,60,80,.16);border-color:#ff3c50;color:#ff3c50;box-shadow:0 0 12px rgba(255,60,80,.4);}
+.ab:disabled{cursor:not-allowed;opacity:.7;}
+
+/* ══════════════════════════════════════
+   FEEDBACK TOAST
+══════════════════════════════════════ */
+#fb{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:rgba(10,4,28,.96);border-radius:20px;
+  padding:16px 26px;text-align:center;z-index:600;
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter:blur(14px);border:2px solid rgba(255,255,255,.1);
+  min-width:210px;max-width:300px;
+}
+#fb.show{transform:translate(-50%,-50%) scale(1);}
+#fb-ic{font-size:2rem;margin-bottom:4px;}
+#fb-img{width:120px;height:120px;object-fit:contain;display:none;margin:0 auto 5px;border-radius:10px;}
+#fb-t{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--txt);}
+#fb-s{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px;}
+#fb.cfb{border-color:var(--gr);box-shadow:0 0 26px rgba(91,255,176,.4);}
+#fb.wfb{border-color:#ff3c50;box-shadow:0 0 26px rgba(255,60,80,.4);}
+#fb.tfb{border-color:var(--yl);box-shadow:0 0 26px rgba(255,233,91,.4);}
+
+/* ══════════════════════════════════════
+   LEVEL-UP OVERLAY
+══════════════════════════════════════ */
+#lvlup{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.92);
+  flex-direction:column;align-items:center;justify-content:center;gap:13px;
+}
+#lvlup.show{display:flex;}
+#lu-stars{font-size:1.7rem;letter-spacing:8px;}
+#lu-title{
+  font-family:'Fredoka One',cursive;font-size:2rem;
+  background:linear-gradient(135deg,var(--yl),var(--pk));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 16px rgba(255,233,91,.7));
+}
+#lu-cat{width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(91,255,176,.65));animation:cfloat 2.2s ease-in-out infinite;}
+#lu-cat-fb{font-size:6rem;display:none;animation:cfloat 2.2s ease-in-out infinite;}
+#lu-desc{color:rgba(255,255,255,.75);font-size:.92rem;text-align:center;}
+#lu-btn{
+  font-family:'Fredoka One',cursive;font-size:1.1rem;padding:10px 30px;
+  background:linear-gradient(135deg,var(--gr),var(--bl));
+  border:none;border-radius:50px;color:#000;cursor:pointer;
+  box-shadow:0 0 18px rgba(91,255,176,.5);transition:all .2s;
+}
+#lu-btn:hover{transform:scale(1.06);}
+
+/* ══════════════════════════════════════
+   END / GAMEOVER
+══════════════════════════════════════ */
+#end,#over{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;}
+.etitle{
+  font-family:'Fredoka One',cursive;font-size:2rem;
+  background:linear-gradient(135deg,var(--yl),var(--pk),var(--bl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.esub{color:rgba(255,255,255,.6);font-size:.92rem;line-height:1.6;}
+#ecat{width:200px;height:200px;object-fit:contain;filter:drop-shadow(0 0 28px rgba(91,224,255,.6));animation:cfloat 3s ease-in-out infinite;}
+#ocat{width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(255,60,80,.4));animation:cfloat 3s ease-in-out infinite;}
+#ecat-fb,#ocat-fb{font-size:5rem;display:none;animation:cfloat 3s ease-in-out infinite;}
+#fscore{font-family:'Fredoka One',cursive;font-size:1.35rem;color:var(--yl);}
+.rbtn{
+  font-family:'Fredoka One',cursive;font-size:1.05rem;padding:10px 30px;
+  background:linear-gradient(135deg,var(--bl),var(--gr));
+  border:none;border-radius:50px;color:#000;cursor:pointer;
+  box-shadow:0 0 16px rgba(91,224,255,.5);transition:all .2s;
+}
+.rbtn:hover{transform:scale(1.05);}
+.hidden{display:none!important;}
+
+/* responsive */
+@media(max-width:580px){
+  #play{grid-template-columns:130px 1fr;}
+  #cat{width:112px;height:112px;}
+}
+</style>
 </head>
 <body>
 
-    <h1>TAMAGOTCHI</h1>
-    <h2 class="nameclass"></h3>
-    <div id="container">
-    <img id="greeting" src="pic/Tamagotchi_blue.webp">
+<div id="bg"></div>
+<div id="bgo"></div>
+<audio id="snd-born" src="audio/bornsound.mp3" preload="auto"></audio>
+
+<!-- ═══ LEVEL-UP OVERLAY ═══ -->
+<div id="lvlup">
+  <div id="lu-stars">⭐ ⭐ ⭐</div>
+  <div id="lu-title">Level geschafft!</div>
+  <img id="lu-cat" src="" alt="">
+  <div id="lu-cat-fb"></div>
+  <div id="lu-desc"></div>
+  <button id="lu-btn" onclick="nextLevel()">Weiter →</button>
+</div>
+
+<!-- ═══ FEEDBACK TOAST ═══ -->
+<div id="fb">
+  <div id="fb-ic"></div>
+  <img id="fb-img" src="" alt="">
+  <div id="fb-t"></div>
+  <div id="fb-s"></div>
+</div>
+
+<div id="root">
+
+  <!-- HEADER -->
+  <div id="hdr">
+    <h1>🐾 Anfisa – Mein Tamagotchi</h1>
+    <div class="sub">Lerne Deutsch und pflege deine Katze!</div>
+  </div>
+
+  <!-- ═══ START SCREEN ═══ -->
+  <div id="start">
+    <div id="ewrap">
+      <div id="eglow"></div>
+      <img id="egg" src="images/pngegg.png" alt="🥚">
+      <div id="cracks">
+        <svg viewBox="0 0 230 280" xmlns="http://www.w3.org/2000/svg">
+          <polyline points="108,92 94,120 114,136 100,168" stroke="#ffe95b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <polyline points="128,89 138,114 124,130 140,158" stroke="#ffe95b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <line x1="118" y1="90" x2="118" y2="145" stroke="rgba(255,233,91,.5)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div id="bwrap">
+        <img id="begg" src="images/baby_in_egg.png" alt="🐱">
+      </div>
     </div>
-    <div class="button">
-    <button class="start">START</button>
-    <button class="htp">HOW TO PLAY</button>
-    <button class="sleep"><img class="icon" src="pic/light.png"></button>
-    <button class="eat"><img class= "icon" src="pic/food.png"></button>
-    <button class="play"><img class= "icon" src="pic/game.png"></button>
-    <h3 class="ageclass">AGE: <span id="age"></span></h3>
-    </div>  
-    <span class="hungerbarname">HUNGER</span>
-    <div class="hungerbar">
-        <span id="hungerlevel" style="width: 100%"></span>
+    <div id="sdesc">🥚 Anfisa wartet in ihrem Ei auf dich!<br>Hilf ihr zu wachsen – beantworte die deutschen Sätze richtig!</div>
+    <button id="sbtn" onclick="startGame()">🐾 Spiel beginnen!</button>
+  </div>
+
+  <!-- ═══ GAME SCREEN ═══ -->
+  <div id="game" class="hidden">
+
+    <!-- top info row: scores + level -->
+    <div id="topbar">
+      <div id="scores">
+        <div class="si sg">✅ <span id="sc">0</span></div>
+        <div class="si sr">❌ <span id="sw">0</span></div>
+      </div>
+      <div id="lbadge">🌟 Level <span id="lnum">1</span>: <span id="lname">Kleinkind → Teenager</span></div>
     </div>
-    <span class="sleepinessbarname">SLEEPINESS</span>
-    <div class="sleepinessbar">
-        <span id="sleepinesslevel" style="width: 100%"></span>
+
+    <!-- ★ PROGRESS BAR — top of play field ★ -->
+    <div id="progrow">
+      <div id="plbl">🎁 <span id="pcnt">0/10</span></div>
+      <div id="accbar"></div>
     </div>
-    <span class="boredombarname">BOREDOM</span>
-    <div class="boredombar">
-        <span id="boredomlevel" style="width: 100%"></span>
+
+    <!-- 3 need pills -->
+    <div id="needs">
+      <div class="nc" id="n0">
+        <div class="ni">🍽️</div>
+        <div><div class="nt">Hunger haben</div><div class="ns">Essen &amp; Trinken</div></div>
+      </div>
+      <div class="nc" id="n1">
+        <div class="ni">😴</div>
+        <div><div class="nt">Schlafen &amp; erholen</div><div class="ns">Schlaf &amp; Ruhe</div></div>
+      </div>
+      <div class="nc" id="n2">
+        <div class="ni">🎮</div>
+        <div><div class="nt">Spielen &amp; amüsieren</div><div class="ns">Spiel &amp; Spaß</div></div>
+      </div>
     </div>
-    <div class = "gameIsOver">
-    <span class="babyDie">LITTLE MONSTER HAS DIED!</span>
-    <img class="bye" src="pic/gameover.png">
-    <audio id="audio" src="pic/bornsound.wav"></audio>
-    <audio id="audio2" src="pic/gameovermusic.wav"></audio>
-    </div>  
-    <script src="js/app.js" type="text/javascript"></script>
+
+    <!-- play field: portrait LEFT | timer+questions RIGHT -->
+    <div id="play">
+
+      <!-- ANFISA PORTRAIT -->
+      <div id="catbox">
+        <img id="cat" src="images/Tamagochi_Anfisa_growing_1.png" alt="Anfisa">
+        <div id="cat-fb"></div>
+        <div id="cat-mood"></div>
+        <div id="catname">Anfisa ✨</div>
+      </div>
+
+      <!-- QUESTION PANEL -->
+      <div id="qpanel">
+        <!-- timer -->
+        <div id="timerrow">
+          <div id="tlbl">⏱</div>
+          <div id="tbg"><div id="tbar"></div></div>
+          <div id="tnum">30</div>
+        </div>
+        <!-- question card -->
+        <div id="qcard">
+          <div id="qmeta">
+            <div id="qprompt">🍽️ Hunger haben</div>
+            <div id="qcnt">Frage <span id="qn">1</span>/10</div>
+          </div>
+          <div id="qinstr">Klicken Sie auf einen Satz mit richtigem Verb!</div>
+          <div id="aw">
+            <button class="ab" id="a0" onclick="ans(0)"></button>
+            <button class="ab" id="a1" onclick="ans(1)"></button>
+            <button class="ab" id="a2" onclick="ans(2)"></button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /play -->
+  </div><!-- /game -->
+
+  <!-- ═══ END SCREEN ═══ -->
+  <div id="end">
+    <div class="etitle">🎉 Wunderbar! 🎉</div>
+    <img id="ecat" src="images/Tamagochi_Anfisa_growing_3.png" alt="🐈">
+    <div id="ecat-fb"></div>
+    <div class="esub">Anfisa ist jetzt eine wunderschöne erwachsene Katze!<br>Du hast alle Aufgaben gemeistert! 🐾✨</div>
+    <div id="fscore"></div>
+    <button class="rbtn" onclick="restart()">🔄 Nochmal spielen</button>
+  </div>
+
+  <!-- ═══ GAMEOVER SCREEN ═══ -->
+  <div id="over">
+    <div class="etitle" style="-webkit-text-fill-color:#ff6b7a;background:none;color:#ff6b7a">😿 Zeit abgelaufen!</div>
+    <img id="ocat" src="images/baby_in_egg.png" alt="🥚">
+    <div id="ocat-fb"></div>
+    <div class="esub">Anfisa ist wieder in ihr Ei zurückgekehrt…<br>Versuche es noch einmal!</div>
+    <button class="rbtn" onclick="restart()">🔄 Neu versuchen</button>
+  </div>
+
+</div><!-- /root -->
+
+<script>
+/* ════════════════════════════════════════
+   WEB AUDIO
+════════════════════════════════════════ */
+const AC = window.AudioContext || window.webkitAudioContext;
+let cx = null;
+function ea(){ if(!cx) cx = new AC(); if(cx.state==='suspended') cx.resume(); }
+function tone(f,tp,v,d,dl=0){
+  const o=cx.createOscillator(), g=cx.createGain();
+  o.connect(g); g.connect(cx.destination);
+  o.type=tp; o.frequency.value=f;
+  const t=cx.currentTime+dl;
+  g.gain.setValueAtTime(v,t);
+  g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.start(t); o.stop(t+d);
+}
+function sCorrect(){ ea(); [[523,'sine',.18,.22,0],[659,'sine',.18,.22,.09],[784,'sine',.18,.22,.18]].forEach(a=>tone(...a)); }
+function sWrong()  { ea(); [[330,'sawtooth',.12,.25,0],[262,'sawtooth',.12,.25,.11],[196,'sawtooth',.12,.25,.22]].forEach(a=>tone(...a)); }
+function sTimeout(){ ea(); [0,.16,.32,.48].forEach(d=>tone(880,'square',.14,.12,d)); }
+function sWin()    { ea(); [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,'triangle',.20,.28,i*.13)); }
+function sOver()   { ea(); [440,392,349,330,294,262].forEach((f,i)=>tone(f,'sine',.18,.35,i*.18)); }
+function sLvlUp()  { ea(); [392,523,659,784,1047].forEach((f,i)=>tone(f,'triangle',.22,.3,i*.12)); }
+
+/* ════════════════════════════════════════
+   DATA
+════════════════════════════════════════ */
+const ACC = [
+  ['🐾','🧢','👖','👕','🧥','🧦','👟','🪣','👜','🔑'],
+  ['🎈','🪩','🔊','🎂','💌','🍰','🍬','🎁','🎵','🎮'],
+  ['✏️','📐','📓','📚','📖','🗑️','📏','🖍️','🎨','📝']
+];
+const LN = ['Kleinkind → Teenager','Teenager → Jungtier','Jungtier → Erwachsen'];
+
+// Per-level: which image to show when question is answered correctly / as base idle
+const LIMG = [
+  'images/Tamagochi_Anfisa_growing_1.png',
+  'images/Tamagochi_Anfisa_growing_2.png',
+  'images/Tamagochi_Anfisa_growing_3.png'
+];
+const LFB = ['🐱','🐈','🐈'];
+
+// Images for each need category (shows Anfisa's emotional state!)
+const NEED_IMG = [
+  'images/young_eat.png',       // 0 = Hunger — cat with bowl
+  'images/baby_in_egg.png',     // 1 = Schlaf  — cat sleeping/resting
+  'images/baby_play.png'        // 2 = Spielen — cat playing
+];
+const NEED_FB  = ['🍽️','😴','🎮'];
+
+// Mood text under portrait
+const MOOD_TEXT = [
+  '😋 Ich habe Hunger!',
+  '😴 Ich bin müde!',
+  '🎮 Ich will spielen!'
+];
+
+// Special states
+const IMG_WRONG   = 'images/young_be_sad_and_cry.png';  // wrong answer
+const IMG_MOUSE   = 'images/A_tickling_mouse_tickles_Anfisa.png'; // tickling mouse
+const IMG_ILL     = 'images/young_fall_ill.png';         // timeout
+const IMG_SAD     = 'images/young_be_sad_and_cry.png';  // gameover
+const IMG_EGG     = 'images/baby_in_egg.png';            // start / gameover
+
+// Prompt labels for each category
+const PLAB = [
+  '🍽️ Anfisas Bedürfnis: Hunger haben',
+  '😴 Anfisas Bedürfnis: Schlafen &amp; erholen',
+  '🎮 Anfisas Bedürfnis: Spielen &amp; amüsieren'
+];
+
+/* Questions — ONLY answer options, no question sentence */
+const QDB = {
+  0:[
+    {o:['Tamagotchi trinkt Milch am liebsten.','Tamagotchi trinkst Milch am liebsten.','Tamagotchi trinke Milch am liebsten.'],c:0},
+    {o:['Tamagotchi fressen Fisch gern.','Tamagotchi fresst Fisch gern.','Tamagotchi frisst Fisch gern.'],c:2},
+    {o:['Tamagotchi trinke Wasser sehr gern.','Tamagotchi trinkt Wasser sehr gern.','Tamagotchi trinkst Wasser sehr gern.'],c:1},
+    {o:['Tamagotchi will Fleisch essen.','Tamagotchi wollt Fleisch essen.','Tamagotchi willen Fleisch essen.'],c:0},
+    {o:['Tamagotchi fressen Katzenfutter gern.','Tamagotchi fresst Katzenfutter gern.','Tamagotchi frisst Katzenfutter gern.'],c:2},
+    {o:['Tamagotchi könnt Eier essen.','Tamagotchi kannst Eier essen.','Tamagotchi kann Eier essen.'],c:2},
+    {o:['Tamagotchi will Brötchen manchmal essen.','Tamagotchi willst Brötchen manchmal essen.','Tamagotchi wollt Brötchen manchmal essen.'],c:0},
+    {o:['Tamagotchi kannst Brei essen.','Tamagotchi kann Brei essen.','Tamagotchi können Brei essen.'],c:1},
+    {o:['Tamagotchi fressen Süßigkeiten.','Tamagotchi fresst Süßigkeiten.','Tamagotchi frisst Süßigkeiten.'],c:2},
+    {o:['Ich muss Tamagotchi Vitamine geben.','Ich musst Tamagotchi Vitamine geben.','Ich müsst Tamagotchi Vitamine geben.'],c:0},
+  ],
+  1:[
+    {o:['Tamagotchi ist müde.','Tamagotchi bin müde.','Tamagotchi bist müde.'],c:0},
+    {o:['Tamagotchi schläfst gern.','Tamagotchi schlafe gern.','Tamagotchi schläft gern.'],c:2},
+    {o:['Tamagotchi liegst im Bett.','Tamagotchi liegt im Bett.','Tamagotchi liege im Bett.'],c:1},
+    {o:['Tamagotchi will schlafen.','Tamagotchi wollt schlafen.','Tamagotchi willen schlafen.'],c:0},
+    {o:['Tamagotchi müsst ins Bett gehen.','Tamagotchi musst ins Bett gehen.','Tamagotchi muss ins Bett gehen.'],c:2},
+    {o:['Tamagotchi können nachts Träume sehen.','Tamagotchi könnt nachts Träume sehen.','Tamagotchi kann nachts Träume sehen.'],c:2},
+    {o:['Tamagotchi ist im Bett.','Tamagotchi bist im Bett.','Tamagotchi bin im Bett.'],c:0},
+    {o:['Ich willst schlafen.','Ich will schlafen.','Ich wollen schlafen.'],c:1},
+    {o:['Du gehe schlafen.','Du geht schlafen.','Du gehst schlafen.'],c:2},
+    {o:['Ich muss Tamagotchi Licht ausmachen.','Ich musst Tamagotchi Licht ausmachen.','Ich müssen Tamagotchi Licht ausmachen.'],c:0},
+  ],
+  2:[
+    {o:['Tamagotchi fährt Fahrrad.','Tamagotchi fährst Fahrrad.','Tamagotchi fahre Fahrrad.'],c:0},
+    {o:['Tamagotchi fährst Ski gern.','Tamagotchi fahren Ski gern.','Tamagotchi fährt Ski gern.'],c:2},
+    {o:['Tamagotchi spiele Computerspiele.','Tamagotchi spielt Computerspiele.','Tamagotchi spielen Computerspiele.'],c:1},
+    {o:['Tamagotchi bastelt ein Katzenhaus.','Tamagotchi bastelst ein Katzenhaus.','Tamagotchi bastle ein Katzenhaus.'],c:0},
+    {o:['Tamagotchi reitest gern.','Tamagotchi reite gern.','Tamagotchi reitet gern.'],c:2},
+    {o:['Tamagotchi könnt Karten spielen.','Tamagotchi könnten Karten spielen.','Tamagotchi kann Karten spielen.'],c:2},
+    {o:['Tamagotchi telefoniert gern.','Tamagotchi telefonierst gern.','Tamagotchi telefoniere gern.'],c:0},
+    {o:['Ich willst Ball spielen.','Ich will Ball spielen.','Ich wollen Ball spielen.'],c:1},
+    {o:['Du gehe spazieren.','Du geht spazieren.','Du gehst spazieren.'],c:2},
+    {o:['Tamagotchi muss musizieren.','Tamagotchi musst musizieren.','Tamagotchi müssen musizieren.'],c:0},
+  ]
+};
+const LQ = [
+  [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2],[0,3]],
+  [[0,4],[1,3],[2,3],[0,5],[1,4],[2,4],[0,6],[1,5],[2,5],[0,7]],
+  [[0,8],[1,6],[2,6],[0,9],[1,7],[2,7],[1,8],[2,8],[1,9],[2,9]],
+];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let G = {lv:0, qi:0, sc:0, sw:0, tm:30, tiv:null, busy:false};
+const $ = id => document.getElementById(id);
+
+/* ════════════════════════════════════════
+   IMAGE HELPERS
+════════════════════════════════════════ */
+function loadImg(src, fallback){
+  const im = $('cat'), fb = $('cat-fb');
+  im.style.animation = 'none'; // reset animation
+  fb.style.display = 'none';
+  im.style.display = 'block';
+  im.style.opacity = '0';
+
+  const doShow = () => {
+    im.style.opacity = '1';
+    // restart float animation
+    im.style.animation = '';
+    void im.offsetWidth;
+    im.style.animation = 'cfloat 3s ease-in-out infinite';
+  };
+
+  im.onerror = () => {
+    im.style.display = 'none';
+    fb.textContent = fallback || '🐱';
+    fb.style.display = 'block';
+  };
+  im.onload = doShow;
+  im.src = src;
+  // if already cached
+  if(im.complete && im.naturalWidth > 0) doShow();
+}
+
+function loadImgNow(src, fallback){
+  // same but no fade
+  const im = $('cat'), fb = $('cat-fb');
+  fb.style.display = 'none';
+  im.style.display = 'block';
+  im.onerror = () => { im.style.display='none'; fb.textContent=fallback||'🐱'; fb.style.display='block'; };
+  im.src = src;
+}
+
+function setMood(text){ $('cat-mood').textContent = text || ''; }
+
+/* ════════════════════════════════════════
+   EGG HATCH
+════════════════════════════════════════ */
+function startGame(){
+  ea();
+  $('sbtn').disabled = true;
+  $('eglow').style.boxShadow = '0 0 70px 18px rgba(255,233,91,.5)';
+
+  const ew = $('egg');
+  if(!document.getElementById('ks')){
+    const s = document.createElement('style');
+    s.id = 'ks';
+    s.textContent = '@keyframes es{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}';
+    document.head.appendChild(s);
+  }
+  ew.style.animation = 'es .45s ease-in-out 3';
+
+  setTimeout(() => $('cracks').style.opacity = '1', 420);
+  setTimeout(() => { try{ $('snd-born').play().catch(()=>{}); }catch(e){} }, 580);
+  setTimeout(() => {
+    ew.style.transition = 'opacity .5s,transform .5s';
+    ew.style.opacity    = '.1';
+    ew.style.transform  = 'translateY(-28px) scale(.8)';
+    $('cracks').style.opacity = '0';
+    $('bwrap').style.opacity  = '1';
+    $('begg').style.transform = 'translateY(0)';
+  }, 1300);
+  setTimeout(() => ew.style.opacity = '0', 1850);
+  setTimeout(() => {
+    $('start').classList.add('hidden');
+    $('game').classList.remove('hidden');
+    G = {lv:0, qi:0, sc:0, sw:0, tm:30, tiv:null, busy:false};
+    initLv();
+  }, 2500);
+}
+
+/* ════════════════════════════════════════
+   LEVEL INIT
+════════════════════════════════════════ */
+function initLv(){
+  G.qi = 0;
+  buildBar();
+  $('lnum').textContent = G.lv + 1;
+  $('lname').textContent = LN[G.lv];
+  // show level's base portrait
+  loadImgNow(LIMG[G.lv], LFB[G.lv]);
+  setMood('');
+  loadQ();
+}
+
+function buildBar(){
+  const b = $('accbar');
+  b.innerHTML = '';
+  for(let i=0; i<10; i++){
+    const s = document.createElement('div');
+    s.className = 'as'; s.id = `s${i}`;
+    b.appendChild(s);
+  }
+  $('pcnt').textContent = '0/10';
+}
+
+function addAcc(i){
+  const s = $(`s${i}`);
+  if(!s) return;
+  s.textContent = ACC[G.lv][i];
+  s.classList.add('on');
+  $('pcnt').textContent = `${i+1}/10`;
+}
+
+/* ════════════════════════════════════════
+   QUESTION
+════════════════════════════════════════ */
+function loadQ(){
+  G.busy = false;
+  clearTiv();
+  const [ct, qi] = LQ[G.lv][G.qi];
+  const q = QDB[ct][qi];
+
+  // highlight active need
+  document.querySelectorAll('.nc').forEach((c,i) => c.classList.toggle('active', i===ct));
+
+  // set prompt
+  $('qprompt').innerHTML = PLAB[ct];
+  $('qn').textContent = G.qi + 1;
+
+  // show Anfisa's EMOTIONAL STATE portrait based on need category
+  loadImgNow(NEED_IMG[ct], NEED_FB[ct]);
+  setMood(MOOD_TEXT[ct]);
+
+  // populate answer buttons
+  for(let i=0; i<3; i++){
+    const b = $(`a${i}`);
+    b.textContent = `${i+1}. ${q.o[i]}`;
+    b.className   = 'ab';
+    b.disabled    = false;
+  }
+  startTm();
+}
+
+/* ════════════════════════════════════════
+   TIMER
+════════════════════════════════════════ */
+function startTm(){
+  G.tm = 30; updTm();
+  G.tiv = setInterval(() => { G.tm--; updTm(); if(G.tm<=0){ clearTiv(); timeout(); } }, 1000);
+}
+function clearTiv(){ if(G.tiv){ clearInterval(G.tiv); G.tiv=null; } }
+function updTm(){
+  const pct = (G.tm/30)*100;
+  const b = $('tbar');
+  b.style.width = pct + '%';
+  b.classList.remove('warn','dng');
+  if(G.tm<=8) b.classList.add('dng');
+  else if(G.tm<=15) b.classList.add('warn');
+  $('tnum').textContent = G.tm;
+}
+function timeout(){
+  sTimeout();
+  loadImgNow(IMG_ILL, '🤒');
+  setMood('🤒 Ich bin krank!');
+  for(let i=0; i<3; i++) $(`a${i}`).disabled = true;
+  showFB('⏰', null, 'Zeit abgelaufen!', 'Anfisa ist krank geworden…', 'tfb');
+  setTimeout(() => { hideFB(); showGameOver(); }, 2000);
+}
+
+/* ════════════════════════════════════════
+   ANSWER
+════════════════════════════════════════ */
+function ans(idx){
+  if(G.busy) return;
+  G.busy = true;
+  ea();
+  clearTiv();
+  const [ct, qi] = LQ[G.lv][G.qi];
+  const ok = QDB[ct][qi].c;
+  for(let i=0; i<3; i++) $(`a${i}`).disabled = true;
+
+  if(idx === ok){
+    /* ── CORRECT ── */
+    $(`a${idx}`).classList.add('ok');
+    G.sc++; $('sc').textContent = G.sc;
+    sCorrect();
+    // bounce animation
+    const im = $('cat');
+    im.style.animation = 'none'; void im.offsetWidth;
+    im.classList.add('bounce');
+    setTimeout(() => { im.classList.remove('bounce'); im.style.animation='cfloat 3s ease-in-out infinite'; }, 750);
+    addAcc(G.qi);
+    // show level idle portrait after correct answer
+    loadImgNow(LIMG[G.lv], LFB[G.lv]);
+    setMood('😊 Danke schön!');
+    showFB('✨', null, 'Super gemacht! 🐾', 'Richtig! Anfisa ist glücklich!', 'cfb');
+    setTimeout(() => { hideFB(); nxtQ(); }, 1500);
+
+  } else {
+    /* ── WRONG ── */
+    $(`a${idx}`).classList.add('no');
+    $(`a${ok}`).classList.add('ok');
+    G.sw++; $('sw').textContent = G.sw;
+    sWrong();
+    // show mouse tickling
+    loadImgNow(IMG_MOUSE, '🐭');
+    setMood('🐭 Kitzeln!');
+    const im = $('cat');
+    im.style.animation = 'none'; void im.offsetWidth;
+    im.classList.add('wiggle');
+    setTimeout(() => {
+      im.classList.remove('wiggle');
+      im.style.animation = 'cfloat 3s ease-in-out infinite';
+      loadImgNow(NEED_IMG[ct], NEED_FB[ct]);
+      setMood(MOOD_TEXT[ct]);
+    }, 2000);
+    showFB(null, IMG_MOUSE, 'Die Maus kitzelt Anfisa! 🐭', 'Falsch – versuch\'s nochmal!', 'wfb');
+    setTimeout(() => { hideFB(); nxtQ(); }, 2100);
+  }
+}
+
+function nxtQ(){
+  G.qi++;
+  if(G.qi >= 10){ G.lv < 2 ? showLvlUp() : showEnd(); }
+  else loadQ();
+}
+
+/* ════════════════════════════════════════
+   FEEDBACK TOAST
+════════════════════════════════════════ */
+function showFB(ic, imgSrc, t, s, cls){
+  const fic=$('fb-ic'), fim=$('fb-img');
+  if(ic){ fic.textContent=ic; fic.style.display='block'; } else fic.style.display='none';
+  if(imgSrc){
+    fim.src=imgSrc;
+    fim.style.display='block';
+    fim.onerror=()=>fim.style.display='none';
+  } else fim.style.display='none';
+  $('fb-t').textContent=t;
+  $('fb-s').textContent=s;
+  $('fb').className='show '+cls;
+}
+function hideFB(){ $('fb').className=''; }
+
+/* ════════════════════════════════════════
+   LEVEL UP
+════════════════════════════════════════ */
+function showLvlUp(){
+  sLvlUp();
+  $('lu-title').textContent = `⭐ Level ${G.lv+1} geschafft! ⭐`;
+  const lc=$('lu-cat'), lcfb=$('lu-cat-fb');
+  lc.onerror = () => { lc.style.display='none'; lcfb.textContent=LFB[G.lv]; lcfb.style.display='block'; };
+  lc.onload  = () => { lc.style.display='block'; lcfb.style.display='none'; };
+  lc.src = LIMG[G.lv];
+  const d = ['Anfisa ist ein Teenager geworden! 🐱','Anfisa ist ein Jungtier geworden! 🐈','Anfisa ist erwachsen! 🐈'];
+  $('lu-desc').textContent = d[G.lv];
+  $('lvlup').classList.add('show');
+}
+function nextLevel(){
+  $('lvlup').classList.remove('show');
+  G.lv++;
+  initLv();
+}
+
+/* ════════════════════════════════════════
+   END / GAMEOVER
+════════════════════════════════════════ */
+function showEnd(){
+  clearTiv(); sWin();
+  $('game').classList.add('hidden');
+  $('end').style.display='flex';
+  $('fscore').textContent = `✅ ${G.sc} richtig von ${G.sc+G.sw} Fragen`;
+  // set end cat image with fallback
+  const ec=$('ecat');
+  ec.onerror=()=>{ ec.style.display='none'; $('ecat-fb').textContent='🐈'; $('ecat-fb').style.display='block'; };
+  ec.src='images/Tamagochi_Anfisa_growing_3.png';
+}
+
+function showGameOver(){
+  clearTiv(); sOver();
+  loadImgNow(IMG_SAD, '😿');
+  setMood('😿 Oh nein...');
+  setTimeout(()=>{
+    $('game').classList.add('hidden');
+    $('over').style.display='flex';
+    const oc=$('ocat');
+    oc.onerror=()=>{ oc.style.display='none'; $('ocat-fb').textContent='🥚'; $('ocat-fb').style.display='block'; };
+    oc.src='images/baby_in_egg.png';
+  }, 700);
+}
+
+function restart(){
+  [$('end'),$('over')].forEach(el=>el.style.display='none');
+  $('game').classList.add('hidden');
+  const ew=$('egg');
+  ew.removeAttribute('style');
+  ew.style.animation='efloat 3s ease-in-out infinite';
+  $('bwrap').style.opacity='0';
+  $('begg').style.transform='translateY(40px)';
+  $('eglow').style.boxShadow='';
+  $('cracks').style.opacity='0';
+  $('sbtn').disabled=false;
+  $('start').classList.remove('hidden');
+}
+</script>
 </body>
 </html>
