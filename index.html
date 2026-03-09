@@ -6,310 +6,260 @@
 <title>Anfisa – Mein Tamagotchi 🐾</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════
-   BASE
-══════════════════════════════════════ */
 :root{
-  --pk:#ff6eb4; --bl:#5be0ff; --gr:#5bffb0; --yl:#ffe95b; --pu:#b56bff;
-  --card:rgba(10,4,26,.84); --txt:#f0e6ff;
+  --pk:#ff6eb4;--bl:#5be0ff;--gr:#5bffb0;--yl:#ffe95b;--pu:#b56bff;
+  --card:rgba(10,4,26,.86);--txt:#f0e6ff;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:'Nunito',sans-serif;background:#06000f;overflow:hidden;}
 
 #bg{position:fixed;inset:0;
   background:url('images/A_house_for_Anfisa.png') center/cover no-repeat;
-  filter:brightness(.35) saturate(1.3);z-index:0;}
+  filter:brightness(.4) saturate(1.5);z-index:0;}
 #bgo{position:fixed;inset:0;
   background:radial-gradient(ellipse at 50% 0%,rgba(80,20,160,.45),transparent 68%);z-index:1;}
+
+#house-deco{
+  position:fixed;bottom:6px;right:8px;z-index:5;
+  width:82px;opacity:.5;pointer-events:none;
+  filter:drop-shadow(0 0 6px rgba(255,233,91,.3));}
 
 #root{
   position:relative;z-index:10;
   height:100vh;display:flex;flex-direction:column;align-items:center;
-  padding:5px 10px 5px;overflow:hidden;
-}
+  padding:5px 10px 5px;overflow:hidden;}
 
-/* ══════════════════════════════════════
-   HEADER
-══════════════════════════════════════ */
 #hdr{text-align:center;flex-shrink:0;margin-bottom:3px;}
-h1{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(1.3rem,3.8vw,2.2rem);
+h1{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,3.8vw,2.2rem);
   background:linear-gradient(135deg,var(--pk),var(--bl),var(--yl));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 12px rgba(255,110,180,.7));letter-spacing:2px;line-height:1.1;
-}
+  filter:drop-shadow(0 0 12px rgba(255,110,180,.7));letter-spacing:2px;line-height:1.1;}
 .sub{color:var(--bl);font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;opacity:.7;}
 
-/* ══════════════════════════════════════
-   START SCREEN
-══════════════════════════════════════ */
+/* START */
 #start{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
 #ewrap{position:relative;width:230px;height:280px;display:flex;align-items:center;justify-content:center;}
-#egg{
-  position:absolute;width:210px;height:265px;object-fit:contain;
+#egg{position:absolute;width:210px;height:265px;object-fit:contain;
   filter:drop-shadow(0 0 28px rgba(255,200,90,.6));
-  animation:efloat 3s ease-in-out infinite;
-  transition:opacity .5s,transform .5s;
-}
+  animation:efloat 3s ease-in-out infinite;transition:opacity .5s,transform .5s;}
 @keyframes efloat{0%,100%{transform:translateY(0) rotate(0)}33%{transform:translateY(-10px) rotate(-2deg)}66%{transform:translateY(-4px) rotate(2deg)}}
 #eglow{position:absolute;width:170px;height:230px;border-radius:50%;pointer-events:none;transition:box-shadow .5s;}
 #cracks{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;}
 #cracks svg{width:100%;height:100%;}
-#bwrap{
-  position:absolute;bottom:0;width:210px;height:155px;
+#bwrap{position:absolute;bottom:0;width:210px;height:155px;
   overflow:hidden;opacity:0;transition:opacity .5s;
-  display:flex;align-items:flex-end;justify-content:center;
-}
+  display:flex;align-items:flex-end;justify-content:center;}
 #begg{width:190px;object-fit:contain;transform:translateY(40px);transition:transform .7s cubic-bezier(.34,1.2,.64,1);}
-#sdesc{
-  color:rgba(255,255,255,.6);font-size:.86rem;text-align:center;max-width:310px;line-height:1.6;
-  background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 16px;
-}
-#sbtn{
-  font-family:'Fredoka One',cursive;font-size:1.35rem;padding:11px 42px;
+#sdesc{color:rgba(255,255,255,.72);font-size:.88rem;text-align:center;max-width:310px;line-height:1.6;
+  background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 16px;}
+#sbtn{font-family:'Fredoka One',cursive;font-size:1.35rem;padding:11px 42px;
   background:linear-gradient(135deg,var(--pk),var(--pu));
   border:none;border-radius:50px;color:#fff;cursor:pointer;
-  box-shadow:0 0 28px rgba(255,110,180,.65);transition:all .2s;letter-spacing:1px;
-}
+  box-shadow:0 0 28px rgba(255,110,180,.65);transition:all .2s;letter-spacing:1px;}
 #sbtn:hover{transform:scale(1.06);box-shadow:0 0 42px rgba(255,110,180,.9);}
 #sbtn:disabled{opacity:.5;cursor:not-allowed;}
 
-/* ══════════════════════════════════════
-   GAME SCREEN
-══════════════════════════════════════ */
+/* GAME */
 #game{flex:1;display:flex;flex-direction:column;width:100%;max-width:880px;gap:5px;overflow:hidden;}
-
-/* ── top info row ── */
 #topbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;}
-#scores{
-  display:flex;gap:12px;align-items:center;
+#scores{display:flex;gap:12px;align-items:center;
   background:var(--card);border:1.5px solid rgba(255,255,255,.1);
-  border-radius:30px;padding:4px 14px;
-}
+  border-radius:30px;padding:4px 14px;}
 .si{font-size:.76rem;font-weight:700;}
 .si span{font-family:'Fredoka One',cursive;font-size:.98rem;}
 .sg{color:var(--gr);}.sr{color:#ff6b7a;}
-#lbadge{
-  display:inline-flex;align-items:center;gap:5px;
+#lbadge{display:inline-flex;align-items:center;gap:5px;
   background:var(--card);border:1.5px solid var(--pu);
   border-radius:30px;padding:4px 14px;
   color:var(--pu);font-weight:700;font-size:.73rem;
-  box-shadow:0 0 12px rgba(181,107,255,.3);
-}
+  box-shadow:0 0 12px rgba(181,107,255,.3);}
 
-/* ── PROGRESS BAR (TOP) ── */
-#progrow{
-  display:flex;align-items:center;gap:7px;flex-shrink:0;
+/* PROGRESS BAR */
+#progrow{display:flex;align-items:center;gap:7px;flex-shrink:0;
   background:var(--card);border:1.5px solid rgba(255,255,255,.07);
-  border-radius:13px;padding:6px 12px;
-}
-#plbl{
-  font-size:.6rem;font-weight:800;color:rgba(255,255,255,.28);
-  text-transform:uppercase;letter-spacing:2px;flex-shrink:0;white-space:nowrap;
-}
+  border-radius:13px;padding:6px 12px;}
+#plbl{font-size:.6rem;font-weight:800;color:rgba(255,255,255,.28);
+  text-transform:uppercase;letter-spacing:2px;flex-shrink:0;white-space:nowrap;}
 #plbl span{color:var(--yl);}
 #accbar{display:flex;gap:3px;flex:1;}
-.as{
-  flex:1;height:26px;min-width:0;
+.as{flex:1;height:26px;min-width:0;
   background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.12);
   border-radius:6px;display:flex;align-items:center;justify-content:center;
-  font-size:.88rem;transition:all .3s;
-}
-.as.on{
-  background:rgba(91,224,255,.1);border:1.5px solid var(--bl);
-  box-shadow:0 0 6px rgba(91,224,255,.3);
-  animation:popin .4s cubic-bezier(.34,1.56,.64,1);
-}
+  font-size:.88rem;transition:all .3s;}
+.as.on{background:rgba(91,224,255,.12);border:1.5px solid var(--bl);
+  box-shadow:0 0 6px rgba(91,224,255,.35);
+  animation:popin .4s cubic-bezier(.34,1.56,.64,1);}
+.as.dim{opacity:.5;}
 @keyframes popin{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
 
-/* ── 3 NEED PILLS ── */
+/* NEEDS */
 #needs{display:flex;gap:7px;flex-shrink:0;}
-.nc{
-  flex:1;display:flex;align-items:center;gap:6px;
+.nc{flex:1;display:flex;align-items:center;gap:6px;
   background:var(--card);border:2px solid rgba(255,255,255,.08);
-  border-radius:12px;padding:6px 10px;transition:all .3s;
-}
-.nc.active{
-  border-color:var(--pk);
+  border-radius:12px;padding:6px 10px;transition:all .3s;}
+.nc.active{border-color:var(--pk);
   box-shadow:0 0 18px rgba(255,110,180,.55),inset 0 0 10px rgba(255,110,180,.09);
-  animation:npulse 1.6s infinite;
-}
+  animation:npulse 1.6s infinite;}
 .nc.active .nt{color:var(--pk);}
 @keyframes npulse{
   0%,100%{box-shadow:0 0 18px rgba(255,110,180,.55),inset 0 0 10px rgba(255,110,180,.09)}
-  50%{box-shadow:0 0 30px rgba(255,110,180,.9),inset 0 0 16px rgba(255,110,180,.16)}
-}
+  50%{box-shadow:0 0 30px rgba(255,110,180,.9),inset 0 0 16px rgba(255,110,180,.16)}}
 .ni{font-size:1.4rem;flex-shrink:0;}
 .nt{font-family:'Fredoka One',cursive;font-size:.76rem;color:rgba(255,255,255,.4);transition:color .3s;line-height:1.2;}
 .ns{font-size:.58rem;color:rgba(255,255,255,.22);}
 
-/* ── MAIN PLAY AREA ── */
+/* PLAY AREA */
 #play{flex:1;display:grid;grid-template-columns:175px 1fr;gap:7px;min-height:0;overflow:hidden;}
 
-/* ── CAT PORTRAIT (left) ── */
-#catbox{
-  background:var(--card);border:1.5px solid rgba(255,255,255,.08);
+/* CAT BOX */
+#catbox{background:var(--card);border:1.5px solid rgba(255,255,255,.08);
   border-radius:16px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:8px 5px;position:relative;overflow:hidden;
-}
-#catbox::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 80%,rgba(91,224,255,.08),transparent 65%);
-}
-#cat{
-  width:148px;height:148px;object-fit:contain;
+  padding:8px 5px;position:relative;overflow:hidden;}
+#catbox::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 80%,rgba(91,224,255,.07),transparent 65%);}
+#catbox::after{content:'🏠';position:absolute;top:5px;right:6px;font-size:.7rem;opacity:.25;}
+#cat{width:148px;height:148px;object-fit:contain;
   filter:drop-shadow(0 0 16px rgba(91,224,255,.35));
   animation:cfloat 3s ease-in-out infinite;
-  position:relative;z-index:1;
-  display:block;
-}
-#cat-fb{
-  font-size:4.5rem;display:none;
-  animation:cfloat 3s ease-in-out infinite;
-  position:relative;z-index:1;
-}
-/* mood label under cat */
-#cat-mood{
-  font-family:'Fredoka One',cursive;font-size:.72rem;
+  position:relative;z-index:1;display:block;}
+#cat-fb{font-size:4.5rem;display:none;animation:cfloat 3s ease-in-out infinite;position:relative;z-index:1;}
+#cat-mood{font-family:'Fredoka One',cursive;font-size:.72rem;
   color:var(--pk);margin-top:4px;text-align:center;
   position:relative;z-index:1;line-height:1.2;
-  text-shadow:0 0 8px rgba(255,110,180,.5);
-}
-#catname{
-  font-family:'Fredoka One',cursive;color:var(--bl);font-size:.95rem;
+  text-shadow:0 0 8px rgba(255,110,180,.5);}
+#catname{font-family:'Fredoka One',cursive;color:var(--bl);font-size:.95rem;
   margin-top:2px;letter-spacing:1px;
-  text-shadow:0 0 10px rgba(91,224,255,.55);
-  position:relative;z-index:1;
-}
+  text-shadow:0 0 10px rgba(91,224,255,.55);position:relative;z-index:1;}
 
 @keyframes cfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes cshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px) rotate(-4deg)}40%,80%{transform:translateX(9px) rotate(4deg)}}
-@keyframes cbounce{0%,100%{transform:scale(1)}30%{transform:scale(1.18) rotate(-5deg)}60%{transform:scale(.93) rotate(3deg)}}
-@keyframes cwiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg) scale(1.07)}75%{transform:rotate(9deg) scale(1.07)}}
-.shake {animation:cshake  .6s  ease   !important;}
-.bounce{animation:cbounce .75s ease   !important;}
-.wiggle{animation:cwiggle .45s ease 3 !important;}
+@keyframes cshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-10px) rotate(-5deg)}40%,80%{transform:translateX(10px) rotate(5deg)}}
+@keyframes cbounce{0%,100%{transform:scale(1)}30%{transform:scale(1.2) rotate(-5deg)}60%{transform:scale(.92) rotate(3deg)}}
+@keyframes cwiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) scale(1.08)}75%{transform:rotate(10deg) scale(1.08)}}
+.shake{animation:cshake .6s ease !important;}
+.bounce{animation:cbounce .75s ease !important;}
+.wiggle{animation:cwiggle .4s ease 4 !important;}
 
-/* ── QUESTION PANEL (right) ── */
+/* QUESTION PANEL */
 #qpanel{display:flex;flex-direction:column;gap:6px;overflow:hidden;min-height:0;}
-
-/* timer row */
 #timerrow{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 #tlbl{color:rgba(255,255,255,.38);font-size:.72rem;font-weight:700;}
 #tbg{flex:1;height:9px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden;}
 #tbar{height:100%;width:100%;background:linear-gradient(90deg,var(--gr),var(--yl));border-radius:8px;transition:width 1s linear,background 1s;}
 #tbar.warn{background:linear-gradient(90deg,#ffb83a,var(--yl));}
-#tbar.dng {background:linear-gradient(90deg,#ff3a3a,#ff9a3a);}
+#tbar.dng{background:linear-gradient(90deg,#ff3a3a,#ff9a3a);}
 #tnum{font-family:'Fredoka One',cursive;font-size:1.1rem;min-width:28px;text-align:right;color:var(--yl);text-shadow:0 0 8px rgba(255,233,91,.6);}
-
-/* question card */
-#qcard{
-  flex:1;background:var(--card);border:1.5px solid rgba(255,255,255,.08);
+#retry-hint{font-size:.65rem;font-weight:700;color:rgba(255,200,80,.9);text-align:center;letter-spacing:.4px;flex-shrink:0;min-height:14px;}
+#qcard{flex:1;background:var(--card);border:1.5px solid rgba(255,255,255,.08);
   border-radius:16px;padding:10px 13px;
-  display:flex;flex-direction:column;overflow:hidden;min-height:0;
-}
+  display:flex;flex-direction:column;overflow:hidden;min-height:0;}
 #qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-shrink:0;}
 #qprompt{font-size:.68rem;font-weight:800;color:var(--yl);text-transform:uppercase;letter-spacing:1.2px;}
 #qcnt{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.28);}
-
-/* instruction line */
-#qinstr{
-  font-size:.72rem;font-weight:700;
-  color:var(--bl);
-  margin-bottom:8px;flex-shrink:0;
-  letter-spacing:.3px;
-}
-
+#qinstr{font-size:.74rem;font-weight:700;color:var(--bl);margin-bottom:8px;flex-shrink:0;}
 #aw{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:5px;min-height:0;}
-.ab{
-  display:block;width:100%;
+.ab{display:block;width:100%;
   background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.11);
   border-radius:11px;padding:8px 13px;
   color:var(--txt);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
-  text-align:left;cursor:pointer;transition:all .16s;flex-shrink:0;
-}
+  text-align:left;cursor:pointer;transition:all .16s;flex-shrink:0;}
 .ab:hover:not(:disabled){background:rgba(91,224,255,.1);border-color:var(--bl);color:var(--bl);transform:translateX(4px);}
-.ab.ok{background:rgba(91,255,176,.16);border-color:var(--gr);color:var(--gr);box-shadow:0 0 12px rgba(91,255,176,.4);}
-.ab.no{background:rgba(255,60,80,.16);border-color:#ff3c50;color:#ff3c50;box-shadow:0 0 12px rgba(255,60,80,.4);}
-.ab:disabled{cursor:not-allowed;opacity:.7;}
+.ab.ok{background:rgba(91,255,176,.18);border-color:var(--gr);color:var(--gr);box-shadow:0 0 12px rgba(91,255,176,.4);}
+.ab.no{background:rgba(255,60,80,.16);border-color:#ff3c50;color:#ff3c50;box-shadow:0 0 10px rgba(255,60,80,.35);}
+.ab:disabled{cursor:not-allowed;opacity:.62;}
+.ab.no:disabled{opacity:.78;}
 
-/* ══════════════════════════════════════
-   FEEDBACK TOAST
-══════════════════════════════════════ */
-#fb{
-  position:fixed;top:50%;left:50%;
+/* ══ MOUSE TICKLE OVERLAY ══ */
+#mouse-overlay{
+  display:none;position:fixed;inset:0;z-index:700;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+  flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+#mouse-overlay.show{display:flex;}
+#mo-img{
+  width:min(320px,62vw);object-fit:contain;
+  filter:drop-shadow(0 0 32px rgba(255,110,180,.9));
+  animation:mopop .55s cubic-bezier(.34,1.56,.64,1),mofloat 2s ease-in-out .55s infinite;}
+@keyframes mopop{0%{transform:scale(0) rotate(-12deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes mofloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+#mo-title{font-family:'Fredoka One',cursive;font-size:1.7rem;
+  color:var(--pk);text-shadow:0 0 22px rgba(255,110,180,.9);
+  text-align:center;letter-spacing:1px;}
+#mo-sub{font-size:.85rem;color:rgba(255,255,255,.65);text-align:center;}
+#mo-progress{width:220px;height:11px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;}
+#mo-bar{height:100%;background:linear-gradient(90deg,var(--pk),var(--pu));border-radius:8px;width:100%;transition:width linear;}
+
+/* FEEDBACK TOAST */
+#fb{position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%) scale(0);
   background:rgba(10,4,28,.96);border-radius:20px;
   padding:16px 26px;text-align:center;z-index:600;
   transition:transform .28s cubic-bezier(.34,1.56,.64,1);
   backdrop-filter:blur(14px);border:2px solid rgba(255,255,255,.1);
-  min-width:210px;max-width:300px;
-}
+  min-width:210px;max-width:300px;}
 #fb.show{transform:translate(-50%,-50%) scale(1);}
 #fb-ic{font-size:2rem;margin-bottom:4px;}
-#fb-img{width:120px;height:120px;object-fit:contain;display:none;margin:0 auto 5px;border-radius:10px;}
+#fb-img{width:100px;height:100px;object-fit:contain;display:none;margin:0 auto 5px;border-radius:10px;}
 #fb-t{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--txt);}
 #fb-s{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px;}
 #fb.cfb{border-color:var(--gr);box-shadow:0 0 26px rgba(91,255,176,.4);}
-#fb.wfb{border-color:#ff3c50;box-shadow:0 0 26px rgba(255,60,80,.4);}
 #fb.tfb{border-color:var(--yl);box-shadow:0 0 26px rgba(255,233,91,.4);}
 
-/* ══════════════════════════════════════
-   LEVEL-UP OVERLAY
-══════════════════════════════════════ */
-#lvlup{
-  display:none;position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.92);
-  flex-direction:column;align-items:center;justify-content:center;gap:13px;
-}
+/* LEVEL-UP OVERLAY */
+#lvlup{display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.93);
+  flex-direction:column;align-items:center;justify-content:center;gap:11px;}
 #lvlup.show{display:flex;}
-#lu-stars{font-size:1.7rem;letter-spacing:8px;}
-#lu-title{
-  font-family:'Fredoka One',cursive;font-size:2rem;
+#lu-stars{font-size:1.8rem;letter-spacing:8px;}
+#lu-title{font-family:'Fredoka One',cursive;font-size:2rem;
   background:linear-gradient(135deg,var(--yl),var(--pk));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 16px rgba(255,233,91,.7));
-}
-#lu-cat{width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 0 26px rgba(91,255,176,.65));animation:cfloat 2.2s ease-in-out infinite;}
+  filter:drop-shadow(0 0 16px rgba(255,233,91,.7));}
+#lu-grade{font-family:'Fredoka One',cursive;font-size:1.6rem;
+  padding:7px 28px;border-radius:50px;letter-spacing:1px;
+  box-shadow:0 0 22px rgba(255,233,91,.45);}
+#lu-pct{font-size:.82rem;color:rgba(255,255,255,.5);}
+#lu-cat{width:185px;height:185px;object-fit:contain;
+  filter:drop-shadow(0 0 28px rgba(91,255,176,.6));
+  animation:cfloat 2.2s ease-in-out infinite;}
 #lu-cat-fb{font-size:6rem;display:none;animation:cfloat 2.2s ease-in-out infinite;}
-#lu-desc{color:rgba(255,255,255,.75);font-size:.92rem;text-align:center;}
-#lu-btn{
-  font-family:'Fredoka One',cursive;font-size:1.1rem;padding:10px 30px;
+#lu-desc{color:rgba(255,255,255,.75);font-size:.9rem;text-align:center;max-width:340px;}
+#lu-btn{font-family:'Fredoka One',cursive;font-size:1.1rem;padding:10px 30px;
   background:linear-gradient(135deg,var(--gr),var(--bl));
   border:none;border-radius:50px;color:#000;cursor:pointer;
-  box-shadow:0 0 18px rgba(91,255,176,.5);transition:all .2s;
-}
+  box-shadow:0 0 18px rgba(91,255,176,.5);transition:all .2s;}
 #lu-btn:hover{transform:scale(1.06);}
 
-/* ══════════════════════════════════════
-   END / GAMEOVER
-══════════════════════════════════════ */
-#end,#over{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;}
-.etitle{
-  font-family:'Fredoka One',cursive;font-size:2rem;
+/* grade colour classes */
+.g5{color:#000!important;background:linear-gradient(135deg,#ffe95b,#ff6eb4)!important;}
+.g4{color:#000!important;background:linear-gradient(135deg,#5bffb0,#5be0ff)!important;}
+.g3{color:#fff!important;background:linear-gradient(135deg,#aaa,#777)!important;}
+.g2{color:#fff!important;background:linear-gradient(135deg,#ff3a3a,#993333)!important;}
+
+/* END / GAMEOVER */
+#end,#over{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;}
+.etitle{font-family:'Fredoka One',cursive;font-size:2rem;
   background:linear-gradient(135deg,var(--yl),var(--pk),var(--bl));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.esub{color:rgba(255,255,255,.6);font-size:.92rem;line-height:1.6;}
-#ecat{width:200px;height:200px;object-fit:contain;filter:drop-shadow(0 0 28px rgba(91,224,255,.6));animation:cfloat 3s ease-in-out infinite;}
-#ocat{width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 0 20px rgba(255,60,80,.4));animation:cfloat 3s ease-in-out infinite;}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.esub{color:rgba(255,255,255,.62);font-size:.92rem;line-height:1.6;max-width:320px;}
+#ecat{width:200px;height:200px;object-fit:contain;
+  filter:drop-shadow(0 0 28px rgba(91,224,255,.65));animation:cfloat 3s ease-in-out infinite;}
+#ocat{width:180px;height:180px;object-fit:contain;
+  filter:drop-shadow(0 0 20px rgba(255,60,80,.4));animation:cfloat 3s ease-in-out infinite;}
 #ecat-fb,#ocat-fb{font-size:5rem;display:none;animation:cfloat 3s ease-in-out infinite;}
-#fscore{font-family:'Fredoka One',cursive;font-size:1.35rem;color:var(--yl);}
-.rbtn{
-  font-family:'Fredoka One',cursive;font-size:1.05rem;padding:10px 30px;
+#end-grade{font-family:'Fredoka One',cursive;font-size:1.8rem;
+  padding:8px 28px;border-radius:50px;box-shadow:0 0 22px rgba(255,233,91,.45);}
+#end-pct{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--yl);}
+#fscore{font-family:'Fredoka One',cursive;font-size:.9rem;color:rgba(255,255,255,.45);}
+.rbtn{font-family:'Fredoka One',cursive;font-size:1.05rem;padding:10px 30px;
   background:linear-gradient(135deg,var(--bl),var(--gr));
   border:none;border-radius:50px;color:#000;cursor:pointer;
-  box-shadow:0 0 16px rgba(91,224,255,.5);transition:all .2s;
-}
+  box-shadow:0 0 16px rgba(91,224,255,.5);transition:all .2s;}
 .rbtn:hover{transform:scale(1.05);}
 .hidden{display:none!important;}
 
-/* responsive */
 @media(max-width:580px){
-  #play{grid-template-columns:130px 1fr;}
-  #cat{width:112px;height:112px;}
+  #play{grid-template-columns:126px 1fr;}
+  #cat{width:108px;height:108px;}
 }
 </style>
 </head>
@@ -317,19 +267,29 @@ h1{
 
 <div id="bg"></div>
 <div id="bgo"></div>
-<audio id="snd-born" src="audio/bornsound.mp3" preload="auto"></audio>
+<img id="house-deco" src="images/A_house_for_Anfisa.png" alt="">
+
+<!-- ═══ MOUSE TICKLE OVERLAY ═══ -->
+<div id="mouse-overlay">
+  <img id="mo-img" src="images/A_tickling_mouse_tickles_Anfisa.png" alt="🐭">
+  <div id="mo-title">🐭 Die Maus kitzelt Anfisa!</div>
+  <div id="mo-sub">Falsch! Versuch es nochmal – der Timer läuft!</div>
+  <div id="mo-progress"><div id="mo-bar"></div></div>
+</div>
 
 <!-- ═══ LEVEL-UP OVERLAY ═══ -->
 <div id="lvlup">
-  <div id="lu-stars">⭐ ⭐ ⭐</div>
-  <div id="lu-title">Level geschafft!</div>
+  <div id="lu-stars"></div>
+  <div id="lu-title"></div>
   <img id="lu-cat" src="" alt="">
   <div id="lu-cat-fb"></div>
+  <div id="lu-grade"></div>
+  <div id="lu-pct"></div>
   <div id="lu-desc"></div>
   <button id="lu-btn" onclick="nextLevel()">Weiter →</button>
 </div>
 
-<!-- ═══ FEEDBACK TOAST ═══ -->
+<!-- ═══ FEEDBACK TOAST (correct/timeout) ═══ -->
 <div id="fb">
   <div id="fb-ic"></div>
   <img id="fb-img" src="" alt="">
@@ -339,13 +299,12 @@ h1{
 
 <div id="root">
 
-  <!-- HEADER -->
   <div id="hdr">
     <h1>🐾 Anfisa – Mein Tamagotchi</h1>
     <div class="sub">Lerne Deutsch und pflege deine Katze!</div>
   </div>
 
-  <!-- ═══ START SCREEN ═══ -->
+  <!-- START SCREEN -->
   <div id="start">
     <div id="ewrap">
       <div id="eglow"></div>
@@ -361,14 +320,12 @@ h1{
         <img id="begg" src="images/baby_in_egg.png" alt="🐱">
       </div>
     </div>
-    <div id="sdesc">🥚 Anfisa wartet in ihrem Ei auf dich!<br>Hilf ihr zu wachsen – beantworte die deutschen Sätze richtig!</div>
+    <div id="sdesc">🥚 Anfisa wartet in ihrem Ei auf dich!<br>Hilf ihr zu wachsen – <strong>wähle</strong> den richtigen deutschen Satz!</div>
     <button id="sbtn" onclick="startGame()">🐾 Spiel beginnen!</button>
   </div>
 
-  <!-- ═══ GAME SCREEN ═══ -->
+  <!-- GAME SCREEN -->
   <div id="game" class="hidden">
-
-    <!-- top info row: scores + level -->
     <div id="topbar">
       <div id="scores">
         <div class="si sg">✅ <span id="sc">0</span></div>
@@ -377,31 +334,21 @@ h1{
       <div id="lbadge">🌟 Level <span id="lnum">1</span>: <span id="lname">Kleinkind → Teenager</span></div>
     </div>
 
-    <!-- ★ PROGRESS BAR — top of play field ★ -->
     <div id="progrow">
       <div id="plbl">🎁 <span id="pcnt">0/10</span></div>
       <div id="accbar"></div>
     </div>
 
-    <!-- 3 need pills -->
     <div id="needs">
-      <div class="nc" id="n0">
-        <div class="ni">🍽️</div>
-        <div><div class="nt">Hunger haben</div><div class="ns">Essen &amp; Trinken</div></div>
-      </div>
-      <div class="nc" id="n1">
-        <div class="ni">😴</div>
-        <div><div class="nt">Schlafen &amp; erholen</div><div class="ns">Schlaf &amp; Ruhe</div></div>
-      </div>
-      <div class="nc" id="n2">
-        <div class="ni">🎮</div>
-        <div><div class="nt">Spielen &amp; amüsieren</div><div class="ns">Spiel &amp; Spaß</div></div>
-      </div>
+      <div class="nc" id="n0"><div class="ni">🍽️</div>
+        <div><div class="nt">Hunger haben</div><div class="ns">Essen &amp; Trinken</div></div></div>
+      <div class="nc" id="n1"><div class="ni">😴</div>
+        <div><div class="nt">Schlafen &amp; erholen</div><div class="ns">Schlaf &amp; Ruhe</div></div></div>
+      <div class="nc" id="n2"><div class="ni">🎮</div>
+        <div><div class="nt">Spielen &amp; amüsieren</div><div class="ns">Spiel &amp; Spaß</div></div></div>
     </div>
 
-    <!-- play field: portrait LEFT | timer+questions RIGHT -->
     <div id="play">
-
       <!-- ANFISA PORTRAIT -->
       <div id="catbox">
         <img id="cat" src="images/Tamagochi_Anfisa_growing_1.png" alt="Anfisa">
@@ -412,19 +359,18 @@ h1{
 
       <!-- QUESTION PANEL -->
       <div id="qpanel">
-        <!-- timer -->
         <div id="timerrow">
           <div id="tlbl">⏱</div>
           <div id="tbg"><div id="tbar"></div></div>
           <div id="tnum">30</div>
         </div>
-        <!-- question card -->
+        <div id="retry-hint"></div>
         <div id="qcard">
           <div id="qmeta">
             <div id="qprompt">🍽️ Hunger haben</div>
             <div id="qcnt">Frage <span id="qn">1</span>/10</div>
           </div>
-          <div id="qinstr">Klicken Sie auf einen Satz mit richtigem Verb!</div>
+          <div id="qinstr">🐾 Wählt den Satz mit dem richtigen Verb!</div>
           <div id="aw">
             <button class="ab" id="a0" onclick="ans(0)"></button>
             <button class="ab" id="a1" onclick="ans(1)"></button>
@@ -432,103 +378,106 @@ h1{
           </div>
         </div>
       </div>
-
-    </div><!-- /play -->
+    </div>
   </div><!-- /game -->
 
-  <!-- ═══ END SCREEN ═══ -->
+  <!-- END SCREEN -->
   <div id="end">
-    <div class="etitle">🎉 Wunderbar! 🎉</div>
-    <img id="ecat" src="images/Tamagochi_Anfisa_growing_3.png" alt="🐈">
+    <div class="etitle" id="end-title">🎉 Wunderbar! 🎉</div>
+    <img id="ecat" src="" alt="">
     <div id="ecat-fb"></div>
-    <div class="esub">Anfisa ist jetzt eine wunderschöne erwachsene Katze!<br>Du hast alle Aufgaben gemeistert! 🐾✨</div>
+    <div id="end-grade"></div>
+    <div id="end-pct"></div>
+    <div class="esub" id="end-sub"></div>
     <div id="fscore"></div>
     <button class="rbtn" onclick="restart()">🔄 Nochmal spielen</button>
   </div>
 
-  <!-- ═══ GAMEOVER SCREEN ═══ -->
+  <!-- GAMEOVER (back to egg) -->
   <div id="over">
-    <div class="etitle" style="-webkit-text-fill-color:#ff6b7a;background:none;color:#ff6b7a">😿 Zeit abgelaufen!</div>
-    <img id="ocat" src="images/baby_in_egg.png" alt="🥚">
+    <div class="etitle" style="-webkit-text-fill-color:#ff6b7a;background:none;color:#ff6b7a">😿 Zurück ins Ei!</div>
+    <img id="ocat" src="images/pngegg.png" alt="🥚">
     <div id="ocat-fb"></div>
-    <div class="esub">Anfisa ist wieder in ihr Ei zurückgekehrt…<br>Versuche es noch einmal!</div>
+    <div class="esub">Anfisa ist zurück in ihr Ei gekehrt…<br>Die Zeit ist abgelaufen! Versuche es nochmal! 🥚</div>
     <button class="rbtn" onclick="restart()">🔄 Neu versuchen</button>
   </div>
 
-</div><!-- /root -->
+</div>
 
 <script>
-/* ════════════════════════════════════════
-   WEB AUDIO
-════════════════════════════════════════ */
-const AC = window.AudioContext || window.webkitAudioContext;
-let cx = null;
-function ea(){ if(!cx) cx = new AC(); if(cx.state==='suspended') cx.resume(); }
+/* ════════════ AUDIO ════════════ */
+const AC=window.AudioContext||window.webkitAudioContext;let cx=null;
+function ea(){if(!cx)cx=new AC();if(cx.state==='suspended')cx.resume();}
 function tone(f,tp,v,d,dl=0){
-  const o=cx.createOscillator(), g=cx.createGain();
-  o.connect(g); g.connect(cx.destination);
-  o.type=tp; o.frequency.value=f;
+  const o=cx.createOscillator(),g=cx.createGain();
+  o.connect(g);g.connect(cx.destination);o.type=tp;o.frequency.value=f;
   const t=cx.currentTime+dl;
-  g.gain.setValueAtTime(v,t);
-  g.gain.exponentialRampToValueAtTime(.001,t+d);
-  o.start(t); o.stop(t+d);
-}
-function sCorrect(){ ea(); [[523,'sine',.18,.22,0],[659,'sine',.18,.22,.09],[784,'sine',.18,.22,.18]].forEach(a=>tone(...a)); }
-function sWrong()  { ea(); [[330,'sawtooth',.12,.25,0],[262,'sawtooth',.12,.25,.11],[196,'sawtooth',.12,.25,.22]].forEach(a=>tone(...a)); }
-function sTimeout(){ ea(); [0,.16,.32,.48].forEach(d=>tone(880,'square',.14,.12,d)); }
-function sWin()    { ea(); [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,'triangle',.20,.28,i*.13)); }
-function sOver()   { ea(); [440,392,349,330,294,262].forEach((f,i)=>tone(f,'sine',.18,.35,i*.18)); }
-function sLvlUp()  { ea(); [392,523,659,784,1047].forEach((f,i)=>tone(f,'triangle',.22,.3,i*.12)); }
+  g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.start(t);o.stop(t+d);}
+function sOk()  {ea();[[523,'sine',.18,.22,0],[659,'sine',.18,.22,.09],[784,'sine',.18,.22,.18]].forEach(a=>tone(...a));}
+function sNo()  {ea();[[330,'sawtooth',.13,.25,0],[262,'sawtooth',.13,.25,.11],[196,'sawtooth',.13,.25,.22]].forEach(a=>tone(...a));}
+function sTout(){ea();[0,.16,.32,.48].forEach(d=>tone(880,'square',.14,.12,d));}
+function sWin() {ea();[523,659,784,1047,784,1047].forEach((f,i)=>tone(f,'triangle',.20,.28,i*.13));}
+function sOver(){ea();[440,392,349,330,294,262].forEach((f,i)=>tone(f,'sine',.18,.35,i*.18));}
+function sLvl() {ea();[392,523,659,784,1047].forEach((f,i)=>tone(f,'triangle',.22,.3,i*.12));}
 
-/* ════════════════════════════════════════
-   DATA
-════════════════════════════════════════ */
-const ACC = [
+/* ════════════ ASSETS ════════════ */
+const ACC=[
   ['🐾','🧢','👖','👕','🧥','🧦','👟','🪣','👜','🔑'],
   ['🎈','🪩','🔊','🎂','💌','🍰','🍬','🎁','🎵','🎮'],
   ['✏️','📐','📓','📚','📖','🗑️','📏','🖍️','🎨','📝']
 ];
-const LN = ['Kleinkind → Teenager','Teenager → Jungtier','Jungtier → Erwachsen'];
+const LN=['Kleinkind → Teenager','Teenager → Jungtier','Jungtier → Erwachsen'];
 
-// Per-level: which image to show when question is answered correctly / as base idle
-const LIMG = [
-  'images/Tamagochi_Anfisa_growing_1.png',
-  'images/Tamagochi_Anfisa_growing_2.png',
-  'images/Tamagochi_Anfisa_growing_3.png'
-];
-const LFB = ['🐱','🐈','🐈'];
+// Growth stage idle portraits
+const LIMG=['images/Tamagochi_Anfisa_growing_1.png','images/Tamagochi_Anfisa_growing_2.png','images/Tamagochi_Anfisa_growing_3.png'];
+const LFB=['🐱','🐈','🐈'];
 
-// Images for each need category (shows Anfisa's emotional state!)
-const NEED_IMG = [
-  'images/young_eat.png',       // 0 = Hunger — cat with bowl
-  'images/baby_in_egg.png',     // 1 = Schlaf  — cat sleeping/resting
-  'images/baby_play.png'        // 2 = Spielen — cat playing
-];
-const NEED_FB  = ['🍽️','😴','🎮'];
+// Level-up celebration: show NEXT growth stage
+const LUIMG=['images/Tamagochi_Anfisa_growing_2.png','images/Tamagochi_Anfisa_growing_3.png','images/Tamagochi_Anfisa_growing_3.png'];
 
-// Mood text under portrait
-const MOOD_TEXT = [
-  '😋 Ich habe Hunger!',
-  '😴 Ich bin müde!',
-  '🎮 Ich will spielen!'
-];
+// Need state portraits
+const NEED_IMG=['images/young_eat.png','images/baby_sleep_2.png','images/young_walk.png'];
+const NEED_FB=['🍽️','😴','🎮'];
+const MOOD_TEXT=['😋 Ich habe Hunger!','😴 Ich bin müde!','🎮 Ich will spielen!'];
 
-// Special states
-const IMG_WRONG   = 'images/young_be_sad_and_cry.png';  // wrong answer
-const IMG_MOUSE   = 'images/A_tickling_mouse_tickles_Anfisa.png'; // tickling mouse
-const IMG_ILL     = 'images/young_fall_ill.png';         // timeout
-const IMG_SAD     = 'images/young_be_sad_and_cry.png';  // gameover
-const IMG_EGG     = 'images/baby_in_egg.png';            // start / gameover
+// Special
+const IMG_MOUSE='images/A_tickling_mouse_tickles_Anfisa.png';
+const IMG_ILL  ='images/young_fall_ill.png';
+const IMG_SAD  ='images/young_be_sad_and_cry.png';
+const IMG_EGG  ='images/pngegg.png';
+const IMG_ADULT='images/Tamagochi_Anfisa_growing_3.png';
 
-// Prompt labels for each category
-const PLAB = [
+const PLAB=[
   '🍽️ Anfisas Bedürfnis: Hunger haben',
   '😴 Anfisas Bedürfnis: Schlafen &amp; erholen',
   '🎮 Anfisas Bedürfnis: Spielen &amp; amüsieren'
 ];
 
-/* Questions — ONLY answer options, no question sentence */
-const QDB = {
+/* ════════════ GRADING ════════════
+   Based on % of questions answered CORRECTLY ON FIRST TRY per level (10 Qs)
+   100–90% → 5 Ausgezeichnet!
+    89–75% → 4 Gut!
+    74–60% → 3 Genügend
+      <60% → 2 Ungenügend
+════════════════════════════════ */
+const GR={
+  5:{t:'Ausgezeichnet!',c:'g5',s:'⭐⭐⭐⭐⭐'},
+  4:{t:'Gut!',          c:'g4',s:'⭐⭐⭐⭐'},
+  3:{t:'Genügend',      c:'g3',s:'⭐⭐⭐'},
+  2:{t:'Ungenügend',    c:'g2',s:'⭐⭐'}
+};
+function grade(ok,total){
+  const p=ok/total*100;
+  return p>=90?5:p>=75?4:p>=60?3:2;
+}
+function applyGrade(el,gr){
+  el.textContent=GR[gr].t;
+  el.className=el.id+' '+GR[gr].c; // keep id class, add colour
+}
+
+/* ════════════ QUESTIONS ════════════ */
+const QDB={
   0:[
     {o:['Tamagotchi trinkt Milch am liebsten.','Tamagotchi trinkst Milch am liebsten.','Tamagotchi trinke Milch am liebsten.'],c:0},
     {o:['Tamagotchi fressen Fisch gern.','Tamagotchi fresst Fisch gern.','Tamagotchi frisst Fisch gern.'],c:2},
@@ -539,7 +488,7 @@ const QDB = {
     {o:['Tamagotchi will Brötchen manchmal essen.','Tamagotchi willst Brötchen manchmal essen.','Tamagotchi wollt Brötchen manchmal essen.'],c:0},
     {o:['Tamagotchi kannst Brei essen.','Tamagotchi kann Brei essen.','Tamagotchi können Brei essen.'],c:1},
     {o:['Tamagotchi fressen Süßigkeiten.','Tamagotchi fresst Süßigkeiten.','Tamagotchi frisst Süßigkeiten.'],c:2},
-    {o:['Ich muss Tamagotchi Vitamine geben.','Ich musst Tamagotchi Vitamine geben.','Ich müsst Tamagotchi Vitamine geben.'],c:0},
+    {o:['Ich muss Tamagotchi Vitamine geben.','Ich musst Tamagotchi Vitamine geben.','Ich müsst Tamagotchi Vitamine geben.'],c:0}
   ],
   1:[
     {o:['Tamagotchi ist müde.','Tamagotchi bin müde.','Tamagotchi bist müde.'],c:0},
@@ -551,7 +500,7 @@ const QDB = {
     {o:['Tamagotchi ist im Bett.','Tamagotchi bist im Bett.','Tamagotchi bin im Bett.'],c:0},
     {o:['Ich willst schlafen.','Ich will schlafen.','Ich wollen schlafen.'],c:1},
     {o:['Du gehe schlafen.','Du geht schlafen.','Du gehst schlafen.'],c:2},
-    {o:['Ich muss Tamagotchi Licht ausmachen.','Ich musst Tamagotchi Licht ausmachen.','Ich müssen Tamagotchi Licht ausmachen.'],c:0},
+    {o:['Ich muss Tamagotchi Licht ausmachen.','Ich musst Tamagotchi Licht ausmachen.','Ich müssen Tamagotchi Licht ausmachen.'],c:0}
   ],
   2:[
     {o:['Tamagotchi fährt Fahrrad.','Tamagotchi fährst Fahrrad.','Tamagotchi fahre Fahrrad.'],c:0},
@@ -563,320 +512,243 @@ const QDB = {
     {o:['Tamagotchi telefoniert gern.','Tamagotchi telefonierst gern.','Tamagotchi telefoniere gern.'],c:0},
     {o:['Ich willst Ball spielen.','Ich will Ball spielen.','Ich wollen Ball spielen.'],c:1},
     {o:['Du gehe spazieren.','Du geht spazieren.','Du gehst spazieren.'],c:2},
-    {o:['Tamagotchi muss musizieren.','Tamagotchi musst musizieren.','Tamagotchi müssen musizieren.'],c:0},
+    {o:['Tamagotchi muss musizieren.','Tamagotchi musst musizieren.','Tamagotchi müssen musizieren.'],c:0}
   ]
 };
-const LQ = [
+const LQ=[
   [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2],[0,3]],
   [[0,4],[1,3],[2,3],[0,5],[1,4],[2,4],[0,6],[1,5],[2,5],[0,7]],
-  [[0,8],[1,6],[2,6],[0,9],[1,7],[2,7],[1,8],[2,8],[1,9],[2,9]],
+  [[0,8],[1,6],[2,6],[0,9],[1,7],[2,7],[1,8],[2,8],[1,9],[2,9]]
 ];
 
-/* ════════════════════════════════════════
-   STATE
-════════════════════════════════════════ */
-let G = {lv:0, qi:0, sc:0, sw:0, tm:30, tiv:null, busy:false};
-const $ = id => document.getElementById(id);
+/* ════════════ STATE ════════════ */
+let G={lv:0,qi:0,sc:0,sw:0,lvFirstOk:0,totalFirstOk:0,qWrong:false,tm:30,tiv:null,busy:false};
+const $=id=>document.getElementById(id);
 
-/* ════════════════════════════════════════
-   IMAGE HELPERS
-════════════════════════════════════════ */
-function loadImg(src, fallback){
-  const im = $('cat'), fb = $('cat-fb');
-  im.style.animation = 'none'; // reset animation
-  fb.style.display = 'none';
-  im.style.display = 'block';
-  im.style.opacity = '0';
-
-  const doShow = () => {
-    im.style.opacity = '1';
-    // restart float animation
-    im.style.animation = '';
-    void im.offsetWidth;
-    im.style.animation = 'cfloat 3s ease-in-out infinite';
-  };
-
-  im.onerror = () => {
-    im.style.display = 'none';
-    fb.textContent = fallback || '🐱';
-    fb.style.display = 'block';
-  };
-  im.onload = doShow;
-  im.src = src;
-  // if already cached
-  if(im.complete && im.naturalWidth > 0) doShow();
+/* ════════════ HELPERS ════════════ */
+function loadImg(src,fb){
+  const im=$('cat'),fe=$('cat-fb');
+  fe.style.display='none';im.style.display='block';
+  im.onerror=()=>{im.style.display='none';fe.textContent=fb||'🐱';fe.style.display='block';};
+  im.src=src;
+}
+function mood(t){$('cat-mood').textContent=t||'';}
+function animCat(cls,ms){
+  const im=$('cat');im.style.animation='none';void im.offsetWidth;
+  im.classList.remove('shake','bounce','wiggle');im.classList.add(cls);
+  setTimeout(()=>{im.classList.remove(cls);im.style.animation='cfloat 3s ease-in-out infinite';},ms||800);
 }
 
-function loadImgNow(src, fallback){
-  // same but no fade
-  const im = $('cat'), fb = $('cat-fb');
-  fb.style.display = 'none';
-  im.style.display = 'block';
-  im.onerror = () => { im.style.display='none'; fb.textContent=fallback||'🐱'; fb.style.display='block'; };
-  im.src = src;
-}
-
-function setMood(text){ $('cat-mood').textContent = text || ''; }
-
-/* ════════════════════════════════════════
-   EGG HATCH
-════════════════════════════════════════ */
+/* ════════════ EGG HATCH ════════════ */
 function startGame(){
-  ea();
-  $('sbtn').disabled = true;
-  $('eglow').style.boxShadow = '0 0 70px 18px rgba(255,233,91,.5)';
-
-  const ew = $('egg');
+  ea();$('sbtn').disabled=true;
+  $('eglow').style.boxShadow='0 0 70px 18px rgba(255,233,91,.5)';
+  const ew=$('egg');
   if(!document.getElementById('ks')){
-    const s = document.createElement('style');
-    s.id = 'ks';
-    s.textContent = '@keyframes es{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}';
-    document.head.appendChild(s);
-  }
-  ew.style.animation = 'es .45s ease-in-out 3';
-
-  setTimeout(() => $('cracks').style.opacity = '1', 420);
-  setTimeout(() => { try{ $('snd-born').play().catch(()=>{}); }catch(e){} }, 580);
-  setTimeout(() => {
-    ew.style.transition = 'opacity .5s,transform .5s';
-    ew.style.opacity    = '.1';
-    ew.style.transform  = 'translateY(-28px) scale(.8)';
-    $('cracks').style.opacity = '0';
-    $('bwrap').style.opacity  = '1';
-    $('begg').style.transform = 'translateY(0)';
-  }, 1300);
-  setTimeout(() => ew.style.opacity = '0', 1850);
-  setTimeout(() => {
-    $('start').classList.add('hidden');
-    $('game').classList.remove('hidden');
-    G = {lv:0, qi:0, sc:0, sw:0, tm:30, tiv:null, busy:false};
-    initLv();
-  }, 2500);
+    const s=document.createElement('style');s.id='ks';
+    s.textContent='@keyframes es{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}';
+    document.head.appendChild(s);}
+  ew.style.animation='es .45s ease-in-out 3';
+  setTimeout(()=>$('cracks').style.opacity='1',420);
+  setTimeout(()=>{
+    ew.style.transition='opacity .5s,transform .5s';ew.style.opacity='.1';
+    ew.style.transform='translateY(-28px) scale(.8)';
+    $('cracks').style.opacity='0';$('bwrap').style.opacity='1';
+    $('begg').style.transform='translateY(0)';},1300);
+  setTimeout(()=>ew.style.opacity='0',1850);
+  setTimeout(()=>{
+    $('start').classList.add('hidden');$('game').classList.remove('hidden');
+    G={lv:0,qi:0,sc:0,sw:0,lvFirstOk:0,totalFirstOk:0,qWrong:false,tm:30,tiv:null,busy:false};
+    initLv();},2500);
 }
 
-/* ════════════════════════════════════════
-   LEVEL INIT
-════════════════════════════════════════ */
+/* ════════════ LEVEL INIT ════════════ */
 function initLv(){
-  G.qi = 0;
+  G.qi=0;G.lvFirstOk=0;G.qWrong=false;
   buildBar();
-  $('lnum').textContent = G.lv + 1;
-  $('lname').textContent = LN[G.lv];
-  // show level's base portrait
-  loadImgNow(LIMG[G.lv], LFB[G.lv]);
-  setMood('');
+  $('lnum').textContent=G.lv+1;$('lname').textContent=LN[G.lv];
+  loadImg(LIMG[G.lv],LFB[G.lv]);mood('');$('retry-hint').textContent='';
   loadQ();
 }
 
 function buildBar(){
-  const b = $('accbar');
-  b.innerHTML = '';
-  for(let i=0; i<10; i++){
-    const s = document.createElement('div');
-    s.className = 'as'; s.id = `s${i}`;
-    b.appendChild(s);
-  }
-  $('pcnt').textContent = '0/10';
+  const b=$('accbar');b.innerHTML='';
+  for(let i=0;i<10;i++){
+    const s=document.createElement('div');s.className='as';s.id='s'+i;b.appendChild(s);}
+  $('pcnt').textContent='0/10';
 }
 
-function addAcc(i){
-  const s = $(`s${i}`);
-  if(!s) return;
-  s.textContent = ACC[G.lv][i];
-  s.classList.add('on');
-  $('pcnt').textContent = `${i+1}/10`;
+function markSlot(i,firstTry){
+  const s=$('s'+i);if(!s)return;
+  s.textContent=ACC[G.lv][i];s.classList.add('on');
+  if(!firstTry)s.classList.add('dim');
+  $('pcnt').textContent=(i+1)+'/10';
 }
 
-/* ════════════════════════════════════════
-   QUESTION
-════════════════════════════════════════ */
+/* ════════════ QUESTION ════════════ */
 function loadQ(){
-  G.busy = false;
-  clearTiv();
-  const [ct, qi] = LQ[G.lv][G.qi];
-  const q = QDB[ct][qi];
-
-  // highlight active need
-  document.querySelectorAll('.nc').forEach((c,i) => c.classList.toggle('active', i===ct));
-
-  // set prompt
-  $('qprompt').innerHTML = PLAB[ct];
-  $('qn').textContent = G.qi + 1;
-
-  // show Anfisa's EMOTIONAL STATE portrait based on need category
-  loadImgNow(NEED_IMG[ct], NEED_FB[ct]);
-  setMood(MOOD_TEXT[ct]);
-
-  // populate answer buttons
-  for(let i=0; i<3; i++){
-    const b = $(`a${i}`);
-    b.textContent = `${i+1}. ${q.o[i]}`;
-    b.className   = 'ab';
-    b.disabled    = false;
-  }
+  G.busy=false;G.qWrong=false;clearTiv();
+  const [ct,qi]=LQ[G.lv][G.qi];const q=QDB[ct][qi];
+  document.querySelectorAll('.nc').forEach((c,i)=>c.classList.toggle('active',i===ct));
+  $('qprompt').innerHTML=PLAB[ct];$('qn').textContent=G.qi+1;
+  $('retry-hint').textContent='';
+  loadImg(NEED_IMG[ct],NEED_FB[ct]);mood(MOOD_TEXT[ct]);
+  for(let i=0;i<3;i++){
+    const b=$('a'+i);b.textContent=(i+1)+'. '+q.o[i];b.className='ab';b.disabled=false;}
   startTm();
 }
 
-/* ════════════════════════════════════════
-   TIMER
-════════════════════════════════════════ */
-function startTm(){
-  G.tm = 30; updTm();
-  G.tiv = setInterval(() => { G.tm--; updTm(); if(G.tm<=0){ clearTiv(); timeout(); } }, 1000);
-}
-function clearTiv(){ if(G.tiv){ clearInterval(G.tiv); G.tiv=null; } }
+/* ════════════ TIMER ════════════ */
+function startTm(){G.tm=30;updTm();G.tiv=setInterval(()=>{G.tm--;updTm();if(G.tm<=0){clearTiv();timeout();}},1000);}
+function clearTiv(){if(G.tiv){clearInterval(G.tiv);G.tiv=null;}}
 function updTm(){
-  const pct = (G.tm/30)*100;
-  const b = $('tbar');
-  b.style.width = pct + '%';
+  const p=(G.tm/30)*100,b=$('tbar');b.style.width=p+'%';
   b.classList.remove('warn','dng');
-  if(G.tm<=8) b.classList.add('dng');
-  else if(G.tm<=15) b.classList.add('warn');
-  $('tnum').textContent = G.tm;
-}
+  if(G.tm<=8)b.classList.add('dng');else if(G.tm<=15)b.classList.add('warn');
+  $('tnum').textContent=G.tm;}
+
 function timeout(){
-  sTimeout();
-  loadImgNow(IMG_ILL, '🤒');
-  setMood('🤒 Ich bin krank!');
-  for(let i=0; i<3; i++) $(`a${i}`).disabled = true;
-  showFB('⏰', null, 'Zeit abgelaufen!', 'Anfisa ist krank geworden…', 'tfb');
-  setTimeout(() => { hideFB(); showGameOver(); }, 2000);
+  sTout();loadImg(IMG_ILL,'🤒');mood('🤒 Ich bin krank!');
+  for(let i=0;i<3;i++)$('a'+i).disabled=true;
+  $('retry-hint').textContent='';
+  showFB('⏰',null,'Zeit abgelaufen!','Anfisa kehrt zurück ins Ei… 🥚','tfb');
+  setTimeout(()=>{hideFB();showOver();},2200);
 }
 
-/* ════════════════════════════════════════
-   ANSWER
-════════════════════════════════════════ */
+/* ════════════ ANSWER ════════════ */
 function ans(idx){
-  if(G.busy) return;
-  G.busy = true;
+  if(G.busy)return;
   ea();
-  clearTiv();
-  const [ct, qi] = LQ[G.lv][G.qi];
-  const ok = QDB[ct][qi].c;
-  for(let i=0; i<3; i++) $(`a${i}`).disabled = true;
+  const [ct,qi]=LQ[G.lv][G.qi];const ok=QDB[ct][qi].c;
+  const btn=$('a'+idx);
 
-  if(idx === ok){
-    /* ── CORRECT ── */
-    $(`a${idx}`).classList.add('ok');
-    G.sc++; $('sc').textContent = G.sc;
-    sCorrect();
-    // bounce animation
-    const im = $('cat');
-    im.style.animation = 'none'; void im.offsetWidth;
-    im.classList.add('bounce');
-    setTimeout(() => { im.classList.remove('bounce'); im.style.animation='cfloat 3s ease-in-out infinite'; }, 750);
-    addAcc(G.qi);
-    // show level idle portrait after correct answer
-    loadImgNow(LIMG[G.lv], LFB[G.lv]);
-    setMood('😊 Danke schön!');
-    showFB('✨', null, 'Super gemacht! 🐾', 'Richtig! Anfisa ist glücklich!', 'cfb');
-    setTimeout(() => { hideFB(); nxtQ(); }, 1500);
+  if(idx===ok){
+    /* CORRECT */
+    G.busy=true;clearTiv();
+    btn.classList.add('ok');
+    for(let i=0;i<3;i++)$('a'+i).disabled=true;
+    G.sc++;$('sc').textContent=G.sc;
+    sOk();animCat('bounce',750);
+    const ft=!G.qWrong;
+    if(ft){G.lvFirstOk++;G.totalFirstOk++;}
+    markSlot(G.qi,ft);
+    loadImg(LIMG[G.lv],LFB[G.lv]);mood('😊 Toll! Danke!');
+    $('retry-hint').textContent='';
+    showFB('✨',null,'Super gemacht! 🐾','Richtig! Anfisa ist glücklich!','cfb');
+    setTimeout(()=>{hideFB();nxtQ();},1600);
 
   } else {
-    /* ── WRONG ── */
-    $(`a${idx}`).classList.add('no');
-    $(`a${ok}`).classList.add('ok');
-    G.sw++; $('sw').textContent = G.sw;
-    sWrong();
-    // show mouse tickling
-    loadImgNow(IMG_MOUSE, '🐭');
-    setMood('🐭 Kitzeln!');
-    const im = $('cat');
-    im.style.animation = 'none'; void im.offsetWidth;
-    im.classList.add('wiggle');
-    setTimeout(() => {
-      im.classList.remove('wiggle');
-      im.style.animation = 'cfloat 3s ease-in-out infinite';
-      loadImgNow(NEED_IMG[ct], NEED_FB[ct]);
-      setMood(MOOD_TEXT[ct]);
-    }, 2000);
-    showFB(null, IMG_MOUSE, 'Die Maus kitzelt Anfisa! 🐭', 'Falsch – versuch\'s nochmal!', 'wfb');
-    setTimeout(() => { hideFB(); nxtQ(); }, 2100);
+    /* WRONG → big mouse overlay! */
+    btn.classList.add('no');btn.disabled=true;
+    G.sw++;$('sw').textContent=G.sw;
+    if(!G.qWrong)G.qWrong=true;
+    sNo();animCat('wiggle',1200);
+    showMouseOverlay(2000);
+    setTimeout(()=>{
+      if(!G.busy){
+        loadImg(NEED_IMG[ct],NEED_FB[ct]);mood(MOOD_TEXT[ct]);
+        const rem=[0,1,2].filter(i=>!$('a'+i).disabled).length;
+        if(rem>0)$('retry-hint').textContent='⚠️ Falsch! Noch '+rem+' Antwort(en) übrig – '+G.tm+'s!';
+      }},2100);
   }
 }
 
-function nxtQ(){
-  G.qi++;
-  if(G.qi >= 10){ G.lv < 2 ? showLvlUp() : showEnd(); }
-  else loadQ();
+/* ════════════ MOUSE OVERLAY ════════════ */
+let moT=null;
+function showMouseOverlay(dur){
+  const ov=$('mouse-overlay'),bar=$('mo-bar');
+  ov.classList.add('show');
+  bar.style.transition='none';bar.style.width='100%';void bar.offsetWidth;
+  bar.style.transition='width '+dur/1000+'s linear';bar.style.width='0%';
+  if(moT)clearTimeout(moT);
+  moT=setTimeout(()=>ov.classList.remove('show'),dur);
 }
 
-/* ════════════════════════════════════════
-   FEEDBACK TOAST
-════════════════════════════════════════ */
-function showFB(ic, imgSrc, t, s, cls){
-  const fic=$('fb-ic'), fim=$('fb-img');
-  if(ic){ fic.textContent=ic; fic.style.display='block'; } else fic.style.display='none';
-  if(imgSrc){
-    fim.src=imgSrc;
-    fim.style.display='block';
-    fim.onerror=()=>fim.style.display='none';
-  } else fim.style.display='none';
-  $('fb-t').textContent=t;
-  $('fb-s').textContent=s;
-  $('fb').className='show '+cls;
-}
-function hideFB(){ $('fb').className=''; }
+function nxtQ(){G.qi++;G.qi>=10?(G.lv<2?showLvlUp():showEnd()):loadQ();}
 
-/* ════════════════════════════════════════
-   LEVEL UP
-════════════════════════════════════════ */
+/* ════════════ FEEDBACK TOAST ════════════ */
+function showFB(ic,imgS,t,s,cls){
+  const fic=$('fb-ic'),fim=$('fb-img');
+  ic?(fic.textContent=ic,fic.style.display='block'):fic.style.display='none';
+  if(imgS){fim.src=imgS;fim.style.display='block';fim.onerror=()=>fim.style.display='none';}
+  else fim.style.display='none';
+  $('fb-t').textContent=t;$('fb-s').textContent=s;$('fb').className='show '+cls;
+}
+function hideFB(){$('fb').className='';}
+
+/* ════════════ LEVEL UP ════════════ */
 function showLvlUp(){
-  sLvlUp();
-  $('lu-title').textContent = `⭐ Level ${G.lv+1} geschafft! ⭐`;
-  const lc=$('lu-cat'), lcfb=$('lu-cat-fb');
-  lc.onerror = () => { lc.style.display='none'; lcfb.textContent=LFB[G.lv]; lcfb.style.display='block'; };
-  lc.onload  = () => { lc.style.display='block'; lcfb.style.display='none'; };
-  lc.src = LIMG[G.lv];
-  const d = ['Anfisa ist ein Teenager geworden! 🐱','Anfisa ist ein Jungtier geworden! 🐈','Anfisa ist erwachsen! 🐈'];
-  $('lu-desc').textContent = d[G.lv];
+  sLvl();
+  const gr=grade(G.lvFirstOk,10);const gi=GR[gr];
+  const pct=Math.round(G.lvFirstOk/10*100);
+  $('lu-title').textContent='⭐ Level '+(G.lv+1)+' geschafft! ⭐';
+  $('lu-stars').textContent=gi.s;
+  applyGrade($('lu-grade'),gr);
+  $('lu-pct').textContent=pct+'% richtig beim ersten Versuch ('+G.lvFirstOk+'/10)';
+
+  // Choose portrait: grade 4-5 → next growth stage!
+  const luSrc=gr>=4?LUIMG[G.lv]:gr===3?LIMG[G.lv]:IMG_SAD;
+  const lc=$('lu-cat'),lcf=$('lu-cat-fb');
+  lc.onerror=()=>{lc.style.display='none';lcf.textContent=LFB[Math.min(G.lv+1,2)];lcf.style.display='block';};
+  lc.onload=()=>{lc.style.display='block';lcf.style.display='none';};
+  lc.src=luSrc;
+
+  const d={
+    5:['🌟 Anfisa ist jetzt ein Teenager! Ausgezeichnet! 🐱','🌟 Anfisa ist ein Jungtier! Fantastisch! 🐈','🌟 Anfisa ist erwachsen! Wunderbar! 🐈'],
+    4:['👍 Gut! Anfisa wächst zum Teenager! 🐱','👍 Gut! Anfisa wird ein Jungtier! 🐈','👍 Gut! Anfisa ist erwachsen! 🐈'],
+    3:['📚 Genügend. Anfisa übt noch weiter…','📚 Genügend. Weiter so!','📚 Genügend. Du schaffst es!'],
+    2:['😿 Ungenügend. Üben macht den Meister!','😿 Ungenügend. Versuche es nochmal!','😿 Ungenügend. Nicht aufgeben!']
+  };
+  $('lu-desc').textContent=d[gr][G.lv];
   $('lvlup').classList.add('show');
 }
-function nextLevel(){
-  $('lvlup').classList.remove('show');
-  G.lv++;
-  initLv();
-}
+function nextLevel(){$('lvlup').classList.remove('show');G.lv++;G.lvFirstOk=0;initLv();}
 
-/* ════════════════════════════════════════
-   END / GAMEOVER
-════════════════════════════════════════ */
+/* ════════════ END SCREEN ════════════ */
 function showEnd(){
-  clearTiv(); sWin();
-  $('game').classList.add('hidden');
-  $('end').style.display='flex';
-  $('fscore').textContent = `✅ ${G.sc} richtig von ${G.sc+G.sw} Fragen`;
-  // set end cat image with fallback
+  clearTiv();sWin();
+  const gr=grade(G.totalFirstOk,30);const gi=GR[gr];
+  const pct=Math.round(G.totalFirstOk/30*100);
+  $('game').classList.add('hidden');$('end').style.display='flex';
+  applyGrade($('end-grade'),gr);
+  $('end-pct').textContent=gi.s+'  '+pct+'%  ('+G.totalFirstOk+'/30 beim ersten Versuch)';
+  $('fscore').textContent='✅ '+G.sc+' richtig gesamt · ❌ '+G.sw+' falsche Klicks';
   const ec=$('ecat');
-  ec.onerror=()=>{ ec.style.display='none'; $('ecat-fb').textContent='🐈'; $('ecat-fb').style.display='block'; };
-  ec.src='images/Tamagochi_Anfisa_growing_3.png';
+  ec.onerror=()=>{ec.style.display='none';$('ecat-fb').textContent='🐈';$('ecat-fb').style.display='block';};
+  if(gr>=4){
+    ec.src=IMG_ADULT;
+    $('end-title').textContent='🎉 Wunderbar! 🎉';
+    $('end-sub').innerHTML='Anfisa ist jetzt eine wunderschöne erwachsene Katze!<br>Du hast alle Aufgaben hervorragend gemeistert! 🐾✨';
+  } else if(gr===3){
+    ec.src=LIMG[2];
+    $('end-title').textContent='🌸 Gut versucht!';
+    $('end-sub').innerHTML='Anfisa ist aufgewachsen! Übe weiter für ein besseres Ergebnis. 📚';
+  } else {
+    ec.src=IMG_EGG;
+    $('end-title').textContent='😿 Zurück ins Ei!';
+    $('end-sub').innerHTML='Anfisa ist wieder ins Ei zurückgekehrt.<br>Übe mehr und versuche es nochmal! 🥚';
+  }
 }
 
-function showGameOver(){
-  clearTiv(); sOver();
-  loadImgNow(IMG_SAD, '😿');
-  setMood('😿 Oh nein...');
+/* ════════════ GAME OVER ════════════ */
+function showOver(){
+  clearTiv();sOver();
+  loadImg(IMG_SAD,'😿');mood('😿 Oh nein...');
   setTimeout(()=>{
-    $('game').classList.add('hidden');
-    $('over').style.display='flex';
+    $('game').classList.add('hidden');$('over').style.display='flex';
     const oc=$('ocat');
-    oc.onerror=()=>{ oc.style.display='none'; $('ocat-fb').textContent='🥚'; $('ocat-fb').style.display='block'; };
-    oc.src='images/baby_in_egg.png';
-  }, 700);
+    oc.onerror=()=>{oc.style.display='none';$('ocat-fb').textContent='🥚';$('ocat-fb').style.display='block';};
+    oc.src=IMG_EGG;},700);
 }
 
+/* ════════════ RESTART ════════════ */
 function restart(){
-  [$('end'),$('over')].forEach(el=>el.style.display='none');
+  [$('end'),$('over')].forEach(e=>e.style.display='none');
   $('game').classList.add('hidden');
-  const ew=$('egg');
-  ew.removeAttribute('style');
-  ew.style.animation='efloat 3s ease-in-out infinite';
-  $('bwrap').style.opacity='0';
-  $('begg').style.transform='translateY(40px)';
-  $('eglow').style.boxShadow='';
-  $('cracks').style.opacity='0';
-  $('sbtn').disabled=false;
-  $('start').classList.remove('hidden');
+  const ew=$('egg');ew.removeAttribute('style');ew.style.animation='efloat 3s ease-in-out infinite';
+  $('bwrap').style.opacity='0';$('begg').style.transform='translateY(40px)';
+  $('eglow').style.boxShadow='';$('cracks').style.opacity='0';
+  $('sbtn').disabled=false;$('start').classList.remove('hidden');
 }
 </script>
 </body>
